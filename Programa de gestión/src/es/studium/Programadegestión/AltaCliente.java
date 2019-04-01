@@ -19,6 +19,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -27,6 +31,9 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 
 	private static final long serialVersionUID = 1L;
 
+	String nombreC;
+	String fechaC;
+	String puntosC;
 
 	Label nombre = new Label("Nombre:");
 	Label fecha = new Label ("Fecha:");
@@ -37,7 +44,6 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 	TextField respuestaPuntos = new TextField("");
 
 	String usuario;
-
 
 	Button alta = new Button("Alta");
 	Button limpiar = new Button("Limpiar");
@@ -97,17 +103,18 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 			respuestaPuntos.setText("0");
 		}else if(arg0.getSource().equals(alta))
 		{		
-			String nombreC =respuestaNombre.getText();
-			String fechaC =respuestaFecha.getText();
+			nombreC =respuestaNombre.getText();
+			fechaC =respuestaFecha.getText();
+			puntosC =respuestaPuntos.getText();
 			try {
-				int puntosC =Integer.parseInt(respuestaPuntos.getText());
-				if((puntosC==0)&&(fechaC.equals(""))&&(nombreC.equals(""))) {
+				if((puntosC=="")||(fechaC.equals(""))||(nombreC.equals(""))) {
 					Incorrecto();
 				}
 				else {
 					//inicar algo
 					Correcto();
 					Cargar();
+					ProcesosDeRegistro();
 					Registro(usuario);
 				}
 
@@ -120,6 +127,64 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 			incorrecto.setVisible(false);
 		}else if(arg0.getSource().equals(aceptar1)) {
 			correcto.setVisible(false);
+		}
+	}
+
+	private void ProcesosDeRegistro() {
+		String driver = "com.mysql.jdbc.Driver";
+		String url = "jdbc:mysql://localhost:3306/login?autoReconnect=true&useSSL=false";
+		String login = "root";
+		String password = "Studium2018;";
+		String sentencia;
+		Connection connection = null;
+		java.sql.Statement statement = null;
+		ResultSet rs = null;
+		
+		try
+		{
+			//Cargar los controladores para el acceso a la BD
+			Class.forName(driver);
+			//Establecer la conexión con la BD Empresa
+			connection = DriverManager.getConnection(url, login, password);
+			//Crear una sentencia
+			statement = connection.createStatement();
+			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
+						
+			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
+			sentencia ="insert into clientes values("+nombreC+","+fechaC+","+puntosC+");";
+			rs = statement.executeQuery(sentencia);
+			if(rs.next())
+			{
+				System.out.println("Añadido OK");
+			}
+			else
+			{
+				System.out.println("Error");
+			}
+		}
+		catch (ClassNotFoundException cnfe)
+		{
+			System.out.println("Error de Clase: "+cnfe.getMessage());
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error de SQL: "+sqle.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if(connection!=null)
+				{
+					rs.close();
+					statement.close();
+					connection.close();
+				}
+			}
+			catch (SQLException e)
+			{
+				System.out.println("Error al cerrar SQL: "+e.getMessage());
+			}
 		}
 	}
 

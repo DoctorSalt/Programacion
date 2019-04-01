@@ -18,7 +18,7 @@ public class Usuarios {
 		
 		String driver = "com.mysql.jdbc.Driver";
 		String url = "jdbc:mysql://localhost:3306/login?autoReconnect=true&useSSL=false";
-		String login = "root";
+		String login = "remoto";
 		String password = "Studium2018;";
 		String sentencia;
 		Connection connection = null;
