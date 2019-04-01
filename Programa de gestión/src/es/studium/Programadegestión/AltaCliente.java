@@ -43,7 +43,7 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 	TextField respuestaFecha = new TextField("");
 	TextField respuestaPuntos = new TextField("");
 
-	String usuario;
+	String usuario="";
 
 	Button alta = new Button("Alta");
 	Button limpiar = new Button("Limpiar");
@@ -112,9 +112,9 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 				}
 				else {
 					//inicar algo
-					Correcto();
 					Cargar();
 					ProcesosDeRegistro();
+					Correcto();
 					Registro(usuario);
 				}
 
@@ -131,9 +131,16 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 	}
 
 	private void ProcesosDeRegistro() {
+		String login = "";
+		if(usuario=="admin") {
+			login="AdminProgramacion";
+		}else {
+			login="Usuario";
+		}
+		
 		String driver = "com.mysql.jdbc.Driver";
 		String url = "jdbc:mysql://localhost:3306/login?autoReconnect=true&useSSL=false";
-		String login = "root";
+		
 		String password = "Studium2018;";
 		String sentencia;
 		Connection connection = null;
@@ -151,7 +158,7 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
 						
 			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
-			sentencia ="insert into clientes values("+nombreC+","+fechaC+","+puntosC+");";
+			sentencia ="insert into tiendapractica.clientes values(null,"+nombreC+","+fechaC+","+puntosC+");";
 			rs = statement.executeQuery(sentencia);
 			if(rs.next())
 			{
@@ -159,6 +166,7 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 			}
 			else
 			{
+				Incorrecto();
 				System.out.println("Error");
 			}
 		}
