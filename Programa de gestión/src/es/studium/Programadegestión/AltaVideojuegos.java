@@ -12,21 +12,37 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class AltaVideojuegos  extends Frame implements WindowListener, ActionListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	Label nombre = new Label("Nombre:");
 	Label generos = new Label("Generos:");
 	Label plataforma = new Label("Plataforma:");
 	
-	TextField respuestaNombre = new TextField("");
-	TextField respuestaGenero = new TextField("");
-	TextField respuestaPlataforma = new TextField("");
+	TextField respuestaNombre = new TextField(9);
+	TextField respuestaGenero = new TextField(9);
+	TextField respuestaPlataforma = new TextField(6);
+	
+	String usuario="";
+	String nombreS;
+	String generosS;
+	String plataformasS;
+	
 	
 	Button alta = new Button("Alta");
 	Button limpiar = new Button("Limpiar");
@@ -46,8 +62,7 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 	Panel panel4 = new Panel(new FlowLayout());
 	
 	AltaVideojuegos(String t){
-		this.setTitle(t);
-		this.setVisible(true);
+		this.setTitle("Alta Videojuegos");
 		this.setLocationRelativeTo(null);
 		this.setSize(300,200);
 		this.setLayout(new GridLayout(4,1));
@@ -67,6 +82,7 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 		addWindowListener(this);
 		alta.addActionListener(this);
 		limpiar.addActionListener(this);	
+		this.setVisible(true);
 	}
 	
 	public static void main(String[] args) {
@@ -82,13 +98,16 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 		}else
 		if(arg0.getSource().equals(alta))
 		{
-				String nombreS = respuestaNombre.getText();
-				String generosS = respuestaGenero.getText(); 
-				String plataformasS = respuestaPlataforma.getText();
+				nombreS = respuestaNombre.getText();
+				generosS = respuestaGenero.getText(); 
+				plataformasS = respuestaPlataforma.getText();
 				if((nombreS.equals(""))||(generosS.equals(""))||(plataformasS.equals(""))) {
-					incorrecto();
+					Incorrecto();
 				}else {
-					correcto();
+					Cargar();
+					ProcesosDeRegistro();
+					Correcto();
+					Registro(usuario);
 				}		
 		}else if (arg0.getSource().equals(aceptar1)) {
 			correcto.setVisible(false);
@@ -96,7 +115,113 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 			incorrecto.setVisible(false);
 		}
 	}
-	private void correcto() {
+	private void ProcesosDeRegistro() {
+		String login = "";
+		if(usuario=="admin") {
+			login="AdminProgramacion";
+		}else {
+			login="Usuario";
+		}
+		
+		String driver = "com.mysql.jdbc.Driver";
+		String url = "jdbc:mysql://localhost:3306/login?autoReconnect=true&useSSL=false";
+		
+		String password = "Studium2018;";
+		String sentencia;
+		Connection connection = null;
+		java.sql.Statement statement = null;
+		ResultSet rs = null;
+		
+		try
+		{
+			//Cargar los controladores para el acceso a la BD
+			Class.forName(driver);
+			//Establecer la conexión con la BD Empresa
+			connection = DriverManager.getConnection(url, login, password);
+			//Crear una sentencia
+			statement = connection.createStatement();
+			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
+						
+			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
+			sentencia ="insert into tiendapractica.videojuegos values(null,"+nombreS+","+generosS+","+plataformasS+");";
+			rs = statement.executeQuery(sentencia);
+			if(rs.next())
+			{
+				System.out.println("Añadido OK");
+			}
+			else
+			{
+				Incorrecto();
+				System.out.println("Error");
+			}
+		}
+		catch (ClassNotFoundException cnfe)
+		{
+			System.out.println("Error de Clase: "+cnfe.getMessage());
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error de SQL: "+sqle.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if(connection!=null)
+				{
+					rs.close();
+					statement.close();
+					connection.close();
+				}
+			}
+			catch (SQLException e)
+			{
+				System.out.println("Error al cerrar SQL: "+e.getMessage());
+			}
+		}		
+	}
+
+	private void Registro(String usuario2) {
+		Calendar fechaRegistro = Calendar.getInstance();
+		Date fecha = fechaRegistro.getTime();
+		try {
+			FileWriter fw = new FileWriter("movimientos.log",true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter salida = new PrintWriter(bw);
+			salida.println("["+fecha+"] "+"["+usuario2+"]"+"[INSERT INTO CLIENTES]");
+			salida.close();
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			System.out.println("Se produjo un error");
+		}
+		
+	}
+
+	private void Cargar() {
+		try
+		{
+			//Origen de los datos en el proyecto anterior
+			FileReader fr = new FileReader("RegistroActivo.log");
+			//Buffer de lectura
+			BufferedReader entrada = new BufferedReader(fr);
+			//Bucle para sacar la información del archivo
+			usuario=entrada.readLine();
+			//Cerrar el objeto entrada
+			entrada.close();
+			fr.close();
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("Archivo NO encontrado");
+		}
+		catch(IOException i)
+		{
+			System.out.println("Se produjo un error de Archivo");
+		}		
+	}
+
+	private void Correcto() {
 		correcto.setVisible(true);
 		correcto.setLocationRelativeTo(null);
 		correcto.setSize(100,100);
@@ -108,7 +233,7 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 		aceptar1.addActionListener(this);
 	}
 
-	private void incorrecto() {
+	private void Incorrecto() {
 		incorrecto.setVisible(true);
 		incorrecto.setLocationRelativeTo(null);
 		incorrecto.setSize(250,100);
