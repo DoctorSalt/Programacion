@@ -11,10 +11,8 @@ import java.awt.*;
 
 public class Programa implements WindowListener, ActionListener{
 	
-	
 	Frame login = new Frame("LOGIN");
-	Dialog errorLogin = new Dialog(login, "Error login");
-
+	
 	Label errorLoginT = new Label("Datos de Login incorrectos");
 	Button errorLoginB = new Button ("Volver a intentarlo");
 
@@ -70,7 +68,7 @@ public class Programa implements WindowListener, ActionListener{
 		
 	}
 	public static void main(String[] args) {
-		new Programa();
+		Programa po = new Programa();
 
 	}
 
@@ -85,79 +83,12 @@ public class Programa implements WindowListener, ActionListener{
 			//admin = Super, Yolo = 12345
 			String usuario=usuarioT.getText();
 			String clave=claveT.getText();
-			
+			logins.setVisible(false);
 			new Usuarios(usuario,clave);
-			
-			
-			/*
-			if(usuario.equals(a.getNombre())){
-				if(clave.equals(a.getContraseña())) {
-					registro(0);
-					login.setVisible(false);
-					new VentanaAdmin("Ventana de Administrador");
-				}else
-				{
-					error();
-				}
-			}else if(usuario.equals(b.getNombre())) {
-				if(clave.equals(b.getContraseña())) {
-					registro(1);
-					login.setVisible(false);
-					new VentanaUsuario("Ventana de Usuario");
-				}else
-				{
-					error();
-				}
-			}else 
-			{
-				error();
-			}
-		*/
 		} else
 		if(olvide.equals(arg0.getSource())){
 			new OlvideClave(null);
-		}else
-		if(errorLoginB.equals(arg0.getSource())) {
-			errorLogin.setVisible(false);
 		}
-	}
-	/*
-	private void registro(int i) {
-		String usuario="";
-		switch(i) {
-		case(0):
-		usuario="admin";
-		break;
-		case(1):
-		usuario="Yolo";
-		break;
-		}
-		Calendar fechaRegistro = Calendar.getInstance();
-		Date fecha = fechaRegistro.getTime();
-		try {
-			FileWriter fw = new FileWriter("movimientos.log",true);
-			BufferedWriter bw = new BufferedWriter(fw);
-			PrintWriter salida = new PrintWriter(bw);
-			salida.println("["+fecha+"] "+"["+usuario+"]"+"[INSERT INTO ...]");
-			salida.close();
-			bw.close();
-			fw.close();
-		} catch (IOException e) {
-			System.out.println("Se produjo un error");
-		}
-	}
-	*/
-	private void error() {
-		//Aqui llamare el dialog error
-		errorLogin.setLayout(new FlowLayout());
-		errorLogin.setLocationRelativeTo(null);
-		errorLogin.setSize(200,100);
-		errorLogin.add(errorLoginT);
-		errorLogin.add(errorLoginB);
-		errorLogin.setVisible(true);
-		errorLogin.addWindowListener(this);
-		errorLoginB.addActionListener(this);
-
 	}
 	@Override
 	public void windowActivated(WindowEvent arg0) {
@@ -176,9 +107,6 @@ public class Programa implements WindowListener, ActionListener{
 		if(login.isActive()) {
 			login.setVisible(false);
 		}
-		if(errorLogin.isActive()) {
-			errorLogin.setVisible(false);
-		}		
 	}
 
 	@Override

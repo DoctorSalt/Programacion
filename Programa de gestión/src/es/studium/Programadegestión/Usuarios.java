@@ -42,19 +42,17 @@ public class Usuarios {
 				System.out.println("Registro OK");
 				Registro(usuario);
 				if(usuario.equals("admin")) {
+					Guardar(usuario);
 					VentanaAdmin va = new VentanaAdmin("Ventana Administrador");
-					Guardar(usuario);
 				}else{
-					VentanaUsuario vu =new VentanaUsuario("Ventana Usuario");
 					Guardar(usuario);
+					VentanaUsuario vu =new VentanaUsuario("Ventana Usuario");
 				}
 			}
 			else
 			{
-				System.out.println("Registro MAL");
+				Error();
 			}
-			
-			
 		}
 		catch (ClassNotFoundException cnfe)
 		{
@@ -80,6 +78,10 @@ public class Usuarios {
 				System.out.println("Error al cerrar SQL: "+e.getMessage());
 			}
 		}
+	}
+
+	private void Error() {
+		new ErrorRegistro();
 	}
 
 	private void Guardar(String usuario) {
