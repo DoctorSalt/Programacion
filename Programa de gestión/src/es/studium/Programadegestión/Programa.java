@@ -83,7 +83,7 @@ public class Programa implements WindowListener, ActionListener{
 			//admin = Super, Yolo = 12345
 			String usuario=usuarioT.getText();
 			String clave=claveT.getText();
-			logins.setVisible(false);
+			login.setVisible(false);
 			new Usuarios(usuario,clave);
 		} else
 		if(olvide.equals(arg0.getSource())){
