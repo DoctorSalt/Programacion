@@ -14,8 +14,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -38,7 +47,8 @@ public class ConsultaTrabajadores extends Frame implements WindowListener, Actio
 	ArrayList<String> listaTrabajadoresBusqueda = new ArrayList<>();
 	String nombreTabla="trabajadores";
 	JTable tablaRecogida;
-
+	String usuario;
+	
 	Button guardar= new Button("Guardar");
 	public ConsultaTrabajadores() {
 		setSize(800,250);
@@ -75,6 +85,8 @@ public class ConsultaTrabajadores extends Frame implements WindowListener, Actio
 		//panel.add(clientes);
 		addWindowListener(this);	
 		setVisible(true);
+		Cargar();
+		Registro(usuario);
 	}
 
 	public static void main(String[] args) {
@@ -177,4 +189,44 @@ public class ConsultaTrabajadores extends Frame implements WindowListener, Actio
 			e.printStackTrace();
 		}
 	}
+	private void Registro(String usuario) {
+		Calendar fechaRegistro = Calendar.getInstance();
+		Date fecha = fechaRegistro.getTime();
+		try {
+			FileWriter fw = new FileWriter("movimientos.log",true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter salida = new PrintWriter(bw);
+			salida.println("["+fecha+"] "+"["+usuario+"]"+"[CONSULTA EN TRABAJADORES]");
+			salida.close();
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			System.out.println("Se produjo un error");
+		}
+	}
+	private void Cargar() {
+		//Como usaremos FileReader y puede lanzar una excepción
+		//necesitaremos un bloque try – catch
+		try
+		{
+			//Origen de los datos en el proyecto anterior
+			FileReader fr = new FileReader("RegistroActivo.log");
+			//Buffer de lectura
+			BufferedReader entrada = new BufferedReader(fr);
+			//Bucle para sacar la información del archivo
+			usuario=entrada.readLine();
+			//Cerrar el objeto entrada
+			entrada.close();
+			fr.close();
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("Archivo NO encontrado");
+		}
+		catch(IOException i)
+		{
+			System.out.println("Se produjo un error de Archivo");
+		}
+	}
+
 }

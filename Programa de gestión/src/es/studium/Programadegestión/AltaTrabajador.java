@@ -16,6 +16,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class AltaTrabajador  extends Frame implements WindowListener, ActionListener{
 
@@ -51,6 +64,17 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 	Button aceptar1 = new Button("Aceptar");
 	Button aceptar2 = new Button("Aceptar");
 
+	String driver = "com.mysql.jdbc.Driver";
+	String url = "jdbc:mysql://localhost:3306/tiendapractica?autoReconnect=true&useSSL=false";		
+	String password = "Studium2018;";
+	String login = "admin";
+	String sentencia;
+	Connection connection = null;
+	java.sql.Statement statement = null;
+	ResultSet rs = null;
+
+	String usuario;	
+	String jefeS;
 
 	Panel panelNorte = new Panel();
 	Panel panelCentro = new Panel();
@@ -58,6 +82,12 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 
 	Panel panelCentro1 = new Panel();
 	Panel panelCentro2 = new Panel();
+
+	Dialog seleccioneJefe = new Dialog(this);
+	Panel panelS=new Panel(new FlowLayout());
+	Label especificar=new Label("Por favor seleccione de quien es jefe");
+	Choice jefeSeleccionado =new Choice();
+	Button elegido = new Button("confimo");
 
 	private static final long serialVersionUID = 1L;
 
@@ -73,10 +103,8 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 		panelCentro1.setLayout(new FlowLayout());
 		panelCentro2.setLayout(new FlowLayout());
 
-		tiendas.addItem("");
-		tiendas.addItem("Tienda1");
-		tiendas.addItem("Tienda2");
-
+		tiendas.addItem("Elige uno");
+		MeterDatos();
 		add(panelNorte, "North");
 		panelNorte.add(nombre);
 		panelNorte.add(nombreRespuesta);
@@ -107,7 +135,66 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 
 	}
 
-	//jefeSi, jefeNo
+	private void MeterDatos() {
+		sentencia="Select * from tiendapractica.tiendas";
+		int datosChoice;
+		String nombreChoice;
+		try
+		{
+			Conectar();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(sentencia);
+			while (rs.next())
+			{
+				datosChoice =rs.getInt("idTienda");
+				nombreChoice = rs.getString("nombreTienda");
+				tiendas.addItem(datosChoice+" - "+nombreChoice);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			incorrecto();
+			System.out.println("Error 2: "+sqle.getMessage());
+		}
+
+		finally
+		{
+			Desconectar();
+		}					
+	}
+
+	private void Desconectar() {
+		try
+		{
+			if(connection!=null)
+			{
+				connection.close();
+			}
+		}
+		catch (SQLException e)
+		{
+			incorrecto();
+			System.out.println("Error 3: "+e.getMessage());
+		}			
+	}
+
+	private void Conectar() {
+		try {
+			//Cargar los controladores para el acceso a la BD
+			Class.forName(driver);
+			//Establecer la conexión con la BD Empresa
+			connection = DriverManager.getConnection(url, login, password);	
+		}catch(ClassNotFoundException cnfe) {
+			incorrecto();
+			System.out.println("Error 1: "+cnfe.getMessage());
+		}
+		catch (SQLException sqle)
+		{
+			incorrecto();
+			System.out.println("Error 2: "+sqle.getMessage());
+		}		
+	}
+
 	public static void main(String[] args) {
 		new AltaTrabajador("Alta Trabajador");
 	}
@@ -128,6 +215,7 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 			String horas = horasContratoRespuesta.getText();
 			String apellidos = apellidoRespuesta.getText();
 			String tipoContrato = tipoContratoRespuesta.getText();
+			String tiendaSeleccionada = splitSeleccionada(tiendas.getSelectedItem());
 			Boolean tieneJefe;
 			if((nombre.equals(""))||(nomina.equals(""))||(horas.equals(""))||(apellidos.equals(""))||(tipoContrato.equals(""))) {
 				incorrecto();
@@ -135,16 +223,176 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 			else {
 				if(true == jefeSi.getState()) {
 					tieneJefe=true;
+					SeleccioneJefe();					
+					Cargar();
+					ProcesosDeRegistro(nombre, nomina, horas, apellidos, tipoContrato,tiendaSeleccionada,jefeS);
+					Registro(usuario);
 					correcto();
 				}else if(true ==jefeNo.getState()) {
 					tieneJefe=false;
+					jefeS=null;
+					Cargar();
+					ProcesosDeRegistro(nombre, nomina, horas, apellidos, tipoContrato,tiendaSeleccionada,jefeS);
+					Registro(usuario);
 					correcto();
 				}else {
 					incorrecto();
 				}
 			}
 		}
+		else if(arg0.getSource().equals(elegido)) {
+			if(jefeSeleccionado.getSelectedItem().equals("Eliga una opcion")) {
+				seleccioneJefe.setVisible(false);
+				incorrecto();
+			}else {
+			jefeS=splitSeleccionada(jefeSeleccionado.getSelectedItem());
+			seleccioneJefe.setVisible(false);
+			}
+		}
 	}
+	private void SeleccioneJefe() {
+		//Esto es el constructor
+		seleccioneJefe.setTitle("Seleccion de Jefe");
+		seleccioneJefe.setSize(300,200);
+		seleccioneJefe.setLocationRelativeTo(null);
+		seleccioneJefe.add(panelS);
+		panelS.add(especificar);
+		panelS.add(jefeSeleccionado);
+		jefeSeleccionado.addItem("Eliga una opcion");
+		MeterDatos2();
+		elegido.addActionListener(this);
+		seleccioneJefe.addWindowListener(this);
+		seleccioneJefe.setVisible(true);
+	}
+
+	private void MeterDatos2() {
+		sentencia="Select * from tiendapractica.trabajadores";
+		int datosChoice;
+		String nombreChoice;
+		try
+		{
+			Conectar();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(sentencia);
+			while (rs.next())
+			{
+				datosChoice =rs.getInt("idTrabajador");
+				nombreChoice = rs.getString("nombreTrabajador");
+				tiendas.addItem(datosChoice+" - "+nombreChoice);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			incorrecto();
+			System.out.println("Error 2: "+sqle.getMessage());
+		}
+
+		finally
+		{
+			Desconectar();
+		}					
+	}
+
+	private String splitSeleccionada(String elegido) {
+		String[] cosasElegidas = elegido.split(" - ");
+		String numeroElegido = cosasElegidas[0];
+		return numeroElegido;
+	}
+
+	private void Cargar() {
+		try	{
+			//Origen de los datos en el proyecto anterior
+			FileReader fr = new FileReader("RegistroActivo.log");
+			//Buffer de lectura
+			BufferedReader entrada = new BufferedReader(fr);
+			//Bucle para sacar la información del archivo
+			usuario=entrada.readLine();
+			//Cerrar el objeto entrada
+			entrada.close();
+			fr.close();
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("Archivo NO encontrado");
+		}
+		catch(IOException i)
+		{
+			System.out.println("Se produjo un error de Archivo");
+		}		
+	}
+
+	private void ProcesosDeRegistro(String nombre, String nomina, String horas, String apellidos, String tipoContrato, String tiendaSeleccionada, String jefe) {
+		String login = "";
+		if(usuario=="admin") {
+			login="AdminProgramacion";
+		}else {
+			login="Usuario";
+		}	
+		try
+		{
+			//Cargar los controladores para el acceso a la BD
+			Class.forName(driver);
+			//Establecer la conexión con la BD Empresa
+			connection = DriverManager.getConnection(url, login, password);
+			//Crear una sentencia
+			statement = connection.createStatement();
+			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
+						
+			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
+			sentencia ="insert into tiendapractica.trabajadores values(null,"+nombre+","+apellidos+", "+nomina+","+tipoContrato+", "+horas+", "+tiendaSeleccionada+", "+jefe+");";
+			rs = statement.executeQuery(sentencia);
+			if(rs.next())
+			{
+				System.out.println("Añadido OK");
+			}
+			else
+			{
+				incorrecto();
+				System.out.println("Error");
+			}
+		}
+		catch (ClassNotFoundException cnfe)
+		{
+			System.out.println("Error de Clase: "+cnfe.getMessage());
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error de SQL: "+sqle.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if(connection!=null)
+				{
+					rs.close();
+					statement.close();
+					connection.close();
+				}
+			}
+			catch (SQLException e)
+			{
+				System.out.println("Error al cerrar SQL: "+e.getMessage());
+			}
+		}
+	}
+
+	private void Registro(String usuario2) {
+		Calendar fechaRegistro = Calendar.getInstance();
+		Date fecha = fechaRegistro.getTime();
+		try {
+			FileWriter fw = new FileWriter("movimientos.log",true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter salida = new PrintWriter(bw);
+			salida.println("["+fecha+"] "+"["+usuario2+"]"+"[INSERT INTO TRABAJADORES]");
+			salida.close();
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			System.out.println("Se produjo un error");
+		}		
+	}
+
 	private void incorrecto() {
 		incorrecto.setVisible(true);
 		incorrecto.setLocationRelativeTo(null);
@@ -185,7 +433,11 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 		}
 		else if(incorrecto.isActive()) {
 			incorrecto.setVisible(false);
-		}	
+		}
+		else if(seleccioneJefe.isActive())
+		{
+			seleccioneJefe.setVisible(false);
+		}
 	}
 
 	public void windowDeactivated(WindowEvent arg0) {
