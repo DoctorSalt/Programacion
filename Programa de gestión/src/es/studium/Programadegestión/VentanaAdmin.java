@@ -106,23 +106,23 @@ public class VentanaAdmin extends Frame implements WindowListener, ActionListene
 		}else if(arg0.getSource().equals(trabajadoresBaja)) {
 			new BajaTrabajador("Baja Trabajador");
 		}else if(arg0.getSource().equals(trabajadoresConsulta)){
-			new ConsultaTrabajador("Consulta Trabajador");
+			new ConsultaTrabajadores();
 		}else if(arg0.getSource().equals(clientesModificacion)) {
 			new ModificacionCliente("Modificacion Cliente");
 		}else if(arg0.getSource().equals(clientesBaja)) {
 			new BajaCliente("Baja Cliente");
 		}else if(arg0.getSource().equals(clientesConsulta)) {
-			new ConsultaCliente("Consulta Cliente");
+			new ConsultaCliente();
 		}else if(arg0.getSource().equals(facturaModificacion)) {
 			new ModificacionFactura("Modificación Factura");
 		}else if(arg0.getSource().equals(facturaBaja)) {
 			new BajaFactura("Baja Factura");
 		}else if(arg0.getSource().equals(facturaConsulta)) {
-			new ConsultaFactura("Consulta Factura");
+			new ConsultaFactura();
 		}else if(arg0.getSource().equals(videojuegosModificacion)){
 			new ModificacionVideojuegos("Modificacion Videojuego");
 		}else if(arg0.getSource().equals(videojuegosConsulta))	{
-			new ConsultaVideojuegos("Consulta Videojuego");
+			new ConsultaVideojuegos();
 		}else if(arg0.getSource().equals(videojuegosBaja))	{
 			new BajaVideojuegos("Baja Videojuego");
 		}

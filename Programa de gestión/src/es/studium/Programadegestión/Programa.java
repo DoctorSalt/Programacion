@@ -69,7 +69,6 @@ public class Programa implements WindowListener, ActionListener{
 	}
 	public static void main(String[] args) {
 		Programa po = new Programa();
-
 	}
 
 	@Override
