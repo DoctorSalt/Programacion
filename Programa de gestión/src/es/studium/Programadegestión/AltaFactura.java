@@ -168,7 +168,7 @@ public class AltaFactura extends Frame implements WindowListener, ActionListener
 		else if(arg0.getSource().equals(alta))
 		{
 			fechaV=fechaRespuesta.getText();
-			clienteV =clienteRespuesta.getSelectedItem();
+			clienteV =SplitElegido(clienteRespuesta.getSelectedItem());
 			if((((fechaV.equals("Dia/Mes/Año"))||(fechaV.equals("//")))||(clienteV.equals("Elige uno")))) 
 			{
 				incorrecto();
@@ -178,6 +178,8 @@ public class AltaFactura extends Frame implements WindowListener, ActionListener
 				correcto();
 				Registro(usuario);
 			}
+		}else if(arg0.getSource().equals(aceptar1)) {
+			correcto.setVisible(false);
 		}
 		
 	}
@@ -218,25 +220,19 @@ public class AltaFactura extends Frame implements WindowListener, ActionListener
 						
 			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
 			fechaV=Americanizacion(fechaV);
-			sentencia ="insert into tiendapractica.facturas values(null,"+fechaV+","+clienteV+");";
-			rs = statement.executeQuery(sentencia);
-			if(rs.next())
-			{
-				System.out.println("Añadido OK");
-			}
-			else
-			{
-				incorrecto();
-				System.out.println("Error");
-			}
+			sentencia ="insert into tiendapractica.facturas values(null, '"+fechaV+"',"+clienteV+");";
+			System.out.println(sentencia);
+			statement.executeUpdate(sentencia);
 		}
 		catch (ClassNotFoundException cnfe)
 		{
 			System.out.println("Error de Clase: "+cnfe.getMessage());
+			incorrecto();
 		}
 		catch (SQLException sqle)
 		{
 			System.out.println("Error de SQL: "+sqle.getMessage());
+			incorrecto();
 		}
 		finally
 		{
@@ -247,6 +243,7 @@ public class AltaFactura extends Frame implements WindowListener, ActionListener
 					rs.close();
 					statement.close();
 					connection.close();
+					correcto();
 				}
 			}
 			catch (SQLException e)
@@ -258,7 +255,7 @@ public class AltaFactura extends Frame implements WindowListener, ActionListener
 
 	private String Americanizacion(String fechaV1) {
 		String[] fecha = fechaV1.split("/");
-		String fechaV2 =fecha[1]+"-"+fecha[0]+"-"+fecha[2];
+		String fechaV2 =fecha[2]+"-"+fecha[1]+"-"+fecha[0];
 		return fechaV2;
 	}
 
@@ -295,14 +292,15 @@ public class AltaFactura extends Frame implements WindowListener, ActionListener
 	}
 
 	private void correcto() {
-		correcto.setVisible(true);
 		correcto.setLocationRelativeTo(null);
 		correcto.setSize(100,100);
 		correcto.setLayout(new FlowLayout());
 		correcto.setResizable(false);
 		correcto.add(bien);
 		correcto.add(aceptar1);
+		aceptar1.addActionListener(this);
 		correcto.addWindowListener(this);
+		correcto.setVisible(true);
 	}
 
 	public void windowActivated(WindowEvent arg0) {
@@ -347,4 +345,9 @@ public class AltaFactura extends Frame implements WindowListener, ActionListener
 		
 	}
 
+	private String SplitElegido(String elegido) {
+		String[] cosasElegidas = elegido.split(" - ");
+		String numeroElegido = cosasElegidas[0];
+		return numeroElegido;
+	}
 }

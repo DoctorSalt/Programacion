@@ -12,6 +12,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class BajaCliente extends Frame implements WindowListener, ActionListener{
 
@@ -27,6 +37,16 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 	Panel panel= new Panel();
 	Panel panel1 = new Panel();
 	
+	String login = "admin";
+	String driver = "com.mysql.jdbc.Driver";
+	String url = "jdbc:mysql://localhost:3306/tiendaPractica?autoReconnect=true&useSSL=false";
+	
+	String password = "Studium2018;";
+	String sentencia;
+	Connection connection = null;
+	java.sql.Statement statement = null;
+	ResultSet rs = null;
+	
 	public BajaCliente(String t) {
 		setTitle(t);
 		setVisible(true);
@@ -40,10 +60,66 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 		add(panel1);
 		panel.add(cliente);
 		panel1.add(aceptar);
-		cliente.addItem("cliente1");
-		cliente.addItem("cliente2");
+		cliente.addItem("Seleccione un cliente");
+		MeterDatos();
 		addWindowListener(this);
 		aceptar.addActionListener(this);	
+	}
+
+	private void MeterDatos() {
+		sentencia="Select * from tiendapractica.clientes";
+		int datosChoice;
+		String nombreChoice;
+		try
+		{
+			Conectar();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(sentencia);
+			while (rs.next())
+			{
+				datosChoice =rs.getInt("idCliente");
+				nombreChoice = rs.getString("nombreCliente");
+				cliente.addItem(datosChoice+" - "+nombreChoice);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		}
+
+		finally
+		{
+			Desconectar();
+		}						
+	}
+
+	private void Desconectar() {
+		try
+		{
+			if(connection!=null)
+			{
+				connection.close();
+			}
+		}
+		catch (SQLException e)
+		{
+			System.out.println("Error 3: "+e.getMessage());
+		}				
+	}
+
+	private void Conectar() {
+		try {
+			//Cargar los controladores para el acceso a la BD
+			Class.forName(driver);
+			//Establecer la conexión con la BD Empresa
+			connection = DriverManager.getConnection(url, login, password);	
+		}catch(ClassNotFoundException cnfe) {
+			System.out.println("Error 1: "+cnfe.getMessage());
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		}				
 	}
 
 	public static void main (String[] args) {
@@ -53,6 +129,9 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(aceptar)) {
+			if(cliente.getSelectedItem().equals("Seleccione un cliente")) {
+				System.out.println("Elija un cliente");
+			}else {
 			muerteConfirmar.setVisible(true);
 			muerteConfirmar.setTitle("Baja Cliente");
 			muerteConfirmar.setLocationRelativeTo(null);
@@ -64,14 +143,83 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 			seguroSi.addActionListener(this);
 			seguroNo.addActionListener(this);
 			muerteConfirmar.addWindowListener(this);
+			}
 		}else if(e.getSource().equals(seguroSi)) {
-			//Elimina
 			muerteConfirmar.setVisible(false);
+			ProcesoEliminacion();
+			Registro();
+			ReajusteChoice();
 		}else if(e.getSource().equals(seguroNo)) {
-			//Vuelve
 			muerteConfirmar.setVisible(false);
 		}
 		
+	}
+
+	private void ProcesoEliminacion() {
+		String seleccionado = SplitElegido(cliente.getSelectedItem());
+		try
+		{
+			//Cargar los controladores para el acceso a la BD
+			Class.forName(driver);
+			//Establecer la conexión con la BD Empresa
+			connection = DriverManager.getConnection(url, login, password);
+			//Crear una sentencia
+			statement = connection.createStatement();
+			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
+			sentencia ="delete from tiendapractica.clientes where idCliente = "+seleccionado+";";
+			System.out.println(sentencia);
+			statement.executeUpdate(sentencia);
+		}
+		catch (ClassNotFoundException cnfe)
+		{
+			System.out.println("Error de Clase: "+cnfe.getMessage());
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error de SQL: "+sqle.getMessage());
+		}
+		finally
+		{
+			try
+			{
+				if(connection!=null)
+				{
+					rs.close();
+					statement.close();
+					connection.close();
+				}
+			}
+			catch (SQLException e)
+			{
+				System.out.println("Error al cerrar SQL: "+e.getMessage());
+			}
+		}
+	}
+
+	private String SplitElegido(String elegido) {
+		String[] cosasElegidas = elegido.split(" - ");
+		String numeroElegido = cosasElegidas[0];
+		return numeroElegido;
+	}
+	
+	private void ReajusteChoice() {
+		cliente.remove(cliente.getSelectedItem());
+	}
+
+	private void Registro() {
+		Calendar fechaRegistro = Calendar.getInstance();
+		Date fecha = fechaRegistro.getTime();
+		try {
+			FileWriter fw = new FileWriter("movimientos.log",true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter salida = new PrintWriter(bw);
+			salida.println("["+fecha+"] "+"["+"Administrador"+"]"+"[DELETE FROM CLIENTES]");
+			salida.close();
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			System.out.println("Se produjo un error");
+		}				
 	}
 
 	@Override
