@@ -57,9 +57,7 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 		add(panelPrincipal2);
 		panelPrincipal1.add(facturas);
 		panelPrincipal2.add(aceptar);
-		facturas.addItem("factura1");
-		facturas.addItem("factura2");
-		facturas.addItem("factura3");
+		facturas.addItem("Eliga una factura");
 		addWindowListener(this);
 		aceptar.addActionListener(this);	
 		}

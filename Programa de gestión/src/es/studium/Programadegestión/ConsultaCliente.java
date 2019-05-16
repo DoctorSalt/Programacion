@@ -174,7 +174,6 @@ public class ConsultaCliente  extends Frame implements WindowListener, ActionLis
 			}
 			for(int i=0;i<tablaRecogida.getRowCount();i++) 
 			{
-				System.out.println(listaClientesTitulo.size());
 				for(int a=0; a<listaClientesTitulo.size();a++) 
 				{
 					System.out.println((i+1)+":"+(a+1));

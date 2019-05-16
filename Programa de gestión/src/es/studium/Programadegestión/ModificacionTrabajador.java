@@ -20,14 +20,11 @@ import javax.swing.JOptionPane;
 
 public class ModificacionTrabajador  extends Frame implements WindowListener, ActionListener{
 
-	
 	private static final long serialVersionUID = 1L;
 	Choice trabajador=new Choice();
 	Button aceptar=new Button("Aceptar");
-	
 	Frame modificarF = new Frame();
-	
-	
+		
 	Label nombre = new Label ("Nombre:");
 	Label apellido = new Label ("Apellido:");
 	Label nomina = new Label ("Nomina:");
