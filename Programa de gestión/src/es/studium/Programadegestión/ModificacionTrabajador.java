@@ -85,6 +85,14 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 	Label especificar=new Label("Por favor seleccione de quien es jefe");
 	Choice jefeSeleccionado =new Choice();
 	Button elegido = new Button("confimo");
+	
+	String nombreS;
+	String nominaS;
+	String horasS;
+	String apellidosS;
+	String tipoContratoS;
+	
+	String tiendaSeleccionada;
 
 	ModificacionTrabajador(String t){
 		setVisible(true);
@@ -112,38 +120,47 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 			seleccion=splitSeleccion(trabajador.getSelectedItem());
 			if(trabajador.getSelectedItem().equals("Seleccione un trabajador")) 
 			{
-				JOptionPane.showMessageDialog (null, "El dato tenia un dato incorrecto", "Continuar", JOptionPane.INFORMATION_MESSAGE);			
+				JOptionPane.showMessageDialog (null, "Por favor, seleccione un Trabajador", "Continuar", JOptionPane.INFORMATION_MESSAGE);			
 			}else {
 				ModificarFuncion(seleccion);
 			}
 		}else if(arg0.getSource().equals(modificar)) {
 
-			String nombre = nombreRespuesta.getText();
-			String nomina = nominaRespuesta.getText();
-			String horas = horasContratoRespuesta.getText();
-			String apellidos = apellidoRespuesta.getText();
-			String tipoContrato = tipoContratoRespuesta.getText();
-			if(tiendas.getSelectedItem().equals("Seleccione un trabajador")) {
-				String tiendaSeleccionada = splitSeleccion(tiendas.getSelectedItem());
-				Boolean tieneJefe;	
-			if(jefeSi.getState()==true)
-			{
-				tieneJefe=true;
-				SeleccioneJefe();	
-				ProcesosDeRegistro(seleccion, nombre, apellidos, nomina, tipoContrato, horas, tiendaSeleccionada, jefeS);
-				Registro();
-				JOptionPane.showMessageDialog (null, "El dato ha sido modificado", "Modificado", JOptionPane.INFORMATION_MESSAGE);
-			}
+			nombreS = nombreRespuesta.getText();
+			nominaS = nominaRespuesta.getText();
+			horasS = horasContratoRespuesta.getText();
+			apellidosS = apellidoRespuesta.getText();
+			tipoContratoS = tipoContratoRespuesta.getText();
+			if(tiendas.getSelectedItem().equals("Seleccione un Tienda")) {
+				JOptionPane.showMessageDialog (null, "Por favor, Seleccione una tienda", "Continuar", JOptionPane.INFORMATION_MESSAGE);
 			}
 			else {
-				System.out.println("Seleccione una Tienda");
+				tiendaSeleccionada = splitSeleccion(tiendas.getSelectedItem());
+				Boolean tieneJefe;	
+				if(jefeSi.getState()==true)
+				{
+					tieneJefe=true;
+					SeleccioneJefe();	
+				}else if(jefeNo.getState()==true){
+					tieneJefe=false;
+					jefeS=null;
+					ProcesosDeRegistro(seleccion, nombreS, apellidosS, nominaS, tipoContratoS, horasS, tiendaSeleccionada, jefeS);
+					Registro();
+					JOptionPane.showMessageDialog (null, "El dato ha sido modificado", "Modificado", JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					JOptionPane.showMessageDialog (null, "Seleccione si tiene Jefe o no", "Volver a intentar", JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 		}else if(arg0.getSource().equals(elegido)) {
 			if(jefeSeleccionado.getSelectedItem().equals("Eliga una opcion")) {
 				seleccioneJefe.setVisible(false);
+				
 			}else {
 				jefeS=splitSeleccion(jefeSeleccionado.getSelectedItem());
 				seleccioneJefe.setVisible(false);
+				ProcesosDeRegistro(seleccion, nombreS, apellidosS, nominaS, tipoContratoS, horasS, tiendaSeleccionada, jefeS);
+				Registro();
+				JOptionPane.showMessageDialog (null, "El dato ha sido modificado", "Modificado", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
 	}
@@ -155,14 +172,15 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 			Class.forName(driver);
 			connection = DriverManager.getConnection(url, login, password);
 			statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);			
-			sentencia ="UPDATE trabajadores SET nombreTrabajadores = '"+nombre+"',"
-					+ "apellidosTrabajador ='"+apellidos+"',"
-					+ "nominaTrabajador = '"+nomina+"',"
-					+ "tipoContratoTrabajador ='"+tipoContrato+"',"
-					+ "horasTrabajador = '"+horas+"',"
-					+ "idTiendaFK1 = '"+tiendaSeleccionada+"',"
-					+ "jefeDeFK1 ='"+jefeX+"',"
-					+ "WHERE idTrabajador="+seleccion+";";
+			sentencia ="UPDATE trabajadores SET nombreTrabajador = '"+nombre+"',"
+					+ " apellidosTrabajador ='"+apellidos+"',"
+					+ " nominaTrabajador = "+nomina+","
+					+ " tipoContratoTrabajador ='"+tipoContrato+"',"
+					+ " horasTrabajador = "+horas+","
+					+ " idTiendaFK1 = '"+tiendaSeleccionada+"',"
+					+ " jefeDeFK1 ="+jefeX
+					+ " WHERE idTrabajador="+seleccion+";";
+			System.out.println(sentencia);
 			statement.executeUpdate(sentencia);
 		}
 		catch (SQLException sqle)
@@ -227,20 +245,20 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 				String repuestaHorasTrabajo= rs.getInt("horasTrabajador")+"";
 				String respuestaTipoContrato = rs.getString("tipoContratoTrabajador");
 				int tiendaSeleccionada = rs.getInt("idTiendaFK1");
-				if(rs.getInt("jefeDeFK1")>0){
+				int jefeSeleccionadoN = rs.getInt("jefeDeFK1");
+				if(jefeSeleccionadoN>0){
+					MeterDatos3();
 					jefeSi.setState(true);
-					jefeSeleccionado.select(rs.getInt("jefeDeFK1")+1);
-
+					jefeSeleccionado.select(jefeSeleccionadoN);
 				}else {
 					jefeNo.setState(true);
 				}
 				nombreRespuesta.setText(respuestasNombre);
 				apellidoRespuesta.setText(respuestaApellido);
 				nominaRespuesta.setText(respuestaNomina);
-				tipoContratoRespuesta.setText(repuestaHorasTrabajo);
-				horasContratoRespuesta.setText(respuestaTipoContrato);
-				MeterDatos3();
-				tiendas.select(tiendaSeleccionada+1);
+				tipoContratoRespuesta.setText(respuestaTipoContrato);
+				horasContratoRespuesta.setText(repuestaHorasTrabajo);
+				tiendas.select(tiendaSeleccionada);
 			}
 		}
 		catch (SQLException sqle)
@@ -384,12 +402,13 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 		seleccioneJefe.add(panelS);
 		panelS.add(especificar);
 		panelS.add(jefeSeleccionado);
-		jefeSeleccionado.addItem("Eliga una opcion");
+		panelS.add(elegido);
 		elegido.addActionListener(this);
 		seleccioneJefe.addWindowListener(this);
 		seleccioneJefe.setVisible(true);
 	}
 	private void MeterDatos3() {
+		jefeSeleccionado.addItem("Eliga un jefe");
 		sentencia="Select * from tiendapractica.trabajadores";
 		int datosChoice;
 		String nombreChoice;
@@ -408,7 +427,7 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 		catch (SQLException sqle)
 		{
 			System.out.println("Error 2: "+sqle.getMessage());
-		}					
+		}
 	}
 	private void Conectar() {
 		try {
