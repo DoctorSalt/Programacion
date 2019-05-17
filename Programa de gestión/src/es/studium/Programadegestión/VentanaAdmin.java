@@ -36,7 +36,6 @@ public class VentanaAdmin extends Frame implements WindowListener, ActionListene
 	Menu facturas = new Menu("Facturas");
 	Menu videojuegos = new Menu("Videojuegos");
 	Menu ayuda = new Menu ("Ayuda");
-	Usuario user;
 
 	public VentanaAdmin(String t) {
 		setTitle(t);

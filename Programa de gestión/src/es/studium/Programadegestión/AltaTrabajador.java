@@ -278,7 +278,7 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 			{
 				datosChoice =rs.getInt("idTrabajador");
 				nombreChoice = rs.getString("nombreTrabajador");
-				tiendas.addItem(datosChoice+" - "+nombreChoice);
+				jefeSeleccionado.addItem(datosChoice+" - "+nombreChoice);
 			}
 		}
 		catch (SQLException sqle)

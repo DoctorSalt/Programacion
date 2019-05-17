@@ -39,8 +39,8 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 	Label fecha = new Label ("Fecha:");
 	Label puntos = new Label ("Puntos:");
 
-	TextField respuestaNombre = new TextField("");
-	TextField respuestaFecha = new TextField("");
+	TextField respuestaNombre = new TextField(9);
+	TextField respuestaFecha = new TextField("Dia/Mes/Año");
 	TextField respuestaPuntos = new TextField("");
 
 	String usuario="";
@@ -107,11 +107,12 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 			fechaC =respuestaFecha.getText();
 			puntosC =respuestaPuntos.getText();
 			try {
-				if((puntosC=="")||(fechaC.equals(""))||(nombreC.equals(""))) {
+				if((puntosC=="")||(fechaC.equals("Dia/Mes/Año"))||(fechaC.equals("//"))||(nombreC.equals(""))) {
 					Incorrecto();
 				}
 				else {
 					//inicar algo
+					fechaC=americano(fechaC);
 					Cargar();
 					ProcesosDeRegistro();
 					Correcto();
@@ -210,6 +211,11 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 		} catch (IOException e) {
 			System.out.println("Se produjo un error");
 		}
+	}
+	private String americano(String fechaV1) {
+		String[] fecha = fechaV1.split("/");
+		String fechaV2 =fecha[2]+"-"+fecha[1]+"-"+fecha[0];
+		return fechaV2;
 	}
 
 	private void Cargar() {

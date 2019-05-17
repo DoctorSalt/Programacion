@@ -5,6 +5,7 @@ import java.awt.Button;
 import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
 import java.awt.Choice;
+import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -15,6 +16,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -24,7 +35,7 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 	Choice trabajador=new Choice();
 	Button aceptar=new Button("Aceptar");
 	Frame modificarF = new Frame();
-		
+
 	Label nombre = new Label ("Nombre:");
 	Label apellido = new Label ("Apellido:");
 	Label nomina = new Label ("Nomina:");
@@ -32,13 +43,13 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 	Label horasContrato = new Label ("Horas de Trabajo:");
 	Label jefe = new Label ("¿Es jefe?");
 	Label tienda = new Label ("Tienda a la que pertenece");
-	
+
 	TextField nombreRespuesta = new TextField("Text");
 	TextField apellidoRespuesta = new TextField("Text");
 	TextField nominaRespuesta = new TextField("500");
 	TextField tipoContratoRespuesta = new TextField("partido");
 	TextField horasContratoRespuesta = new TextField("39"); //se refiere a horas semanales
-	
+
 	CheckboxGroup jefeRespuesta = new CheckboxGroup();
 	Checkbox jefeSi = new Checkbox("Si",false,jefeRespuesta);
 	Checkbox jefeNo = new Checkbox("No", false, jefeRespuesta);
@@ -47,13 +58,33 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 
 	Panel panelPrincipal1= new Panel();
 	Panel panelPrincipal2= new Panel();
-	
+
 	Panel panelNorte = new Panel();
 	Panel panelCentro = new Panel();
 	Panel panelDoble = new Panel();
-	
+
 	Panel panelCentro1 = new Panel();
 	Panel panelCentro2 = new Panel();
+
+	String seleccion;
+
+	String login = "admin";
+	String driver = "com.mysql.jdbc.Driver";
+	String url = "jdbc:mysql://localhost:3306/tiendaPractica?autoReconnect=true&useSSL=false";
+
+	String password = "Studium2018;";
+	String sentencia;
+	Connection connection = null;
+	java.sql.Statement statement = null;
+	ResultSet rs = null;
+
+	String jefeS=null;
+
+	Dialog seleccioneJefe = new Dialog(this);
+	Panel panelS=new Panel(new FlowLayout());
+	Label especificar=new Label("Por favor seleccione de quien es jefe");
+	Choice jefeSeleccionado =new Choice();
+	Button elegido = new Button("confimo");
 
 	ModificacionTrabajador(String t){
 		setVisible(true);
@@ -67,28 +98,82 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 		add(panelPrincipal2);
 		panelPrincipal1.add(trabajador);
 		panelPrincipal2.add(aceptar);
-		trabajador.addItem("trabajador1");
-		trabajador.addItem("trabajador2");
-		trabajador.addItem("trabajador3");
+		trabajador.addItem("Seleccione un trabajador");
+		MeterDatos();
 		addWindowListener(this);
 		aceptar.addActionListener(this);
 	}
 	public static void main(String[] args) {
 		new ModificacionTrabajador("Modificacion Trabajador");
 	}
-	
+
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource().equals(aceptar)) {
-			String seleccion=trabajador.getSelectedItem();
-			ModificarFuncion(seleccion);
+			seleccion=splitSeleccion(trabajador.getSelectedItem());
+			if(trabajador.getSelectedItem().equals("Seleccione un trabajador")) 
+			{
+				JOptionPane.showMessageDialog (null, "El dato tenia un dato incorrecto", "Continuar", JOptionPane.INFORMATION_MESSAGE);			
+			}else {
+				ModificarFuncion(seleccion);
+			}
 		}else if(arg0.getSource().equals(modificar)) {
-			//Colocar funcion que modifique cosas
-			JOptionPane.showMessageDialog (null, "El dato ha sido modificado", "Modificado", JOptionPane.INFORMATION_MESSAGE);
+
+			String nombre = nombreRespuesta.getText();
+			String nomina = nominaRespuesta.getText();
+			String horas = horasContratoRespuesta.getText();
+			String apellidos = apellidoRespuesta.getText();
+			String tipoContrato = tipoContratoRespuesta.getText();
+			if(tiendas.getSelectedItem().equals("Seleccione un trabajador")) {
+				String tiendaSeleccionada = splitSeleccion(tiendas.getSelectedItem());
+				Boolean tieneJefe;	
+			if(jefeSi.getState()==true)
+			{
+				tieneJefe=true;
+				SeleccioneJefe();	
+				ProcesosDeRegistro(seleccion, nombre, apellidos, nomina, tipoContrato, horas, tiendaSeleccionada, jefeS);
+				Registro();
+				JOptionPane.showMessageDialog (null, "El dato ha sido modificado", "Modificado", JOptionPane.INFORMATION_MESSAGE);
+			}
+			}
+			else {
+				System.out.println("Seleccione una Tienda");
+			}
+		}else if(arg0.getSource().equals(elegido)) {
+			if(jefeSeleccionado.getSelectedItem().equals("Eliga una opcion")) {
+				seleccioneJefe.setVisible(false);
+			}else {
+				jefeS=splitSeleccion(jefeSeleccionado.getSelectedItem());
+				seleccioneJefe.setVisible(false);
+			}
 		}
 	}
 
+	private void ProcesosDeRegistro(String seleccion, String nombre, String apellidos, String nomina, String tipoContrato, String horas, String tiendaSeleccionada, String jefeX) {
+		Conectar();
+		try
+		{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, login, password);
+			statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);			
+			sentencia ="UPDATE trabajadores SET nombreTrabajadores = '"+nombre+"',"
+					+ "apellidosTrabajador ='"+apellidos+"',"
+					+ "nominaTrabajador = '"+nomina+"',"
+					+ "tipoContratoTrabajador ='"+tipoContrato+"',"
+					+ "horasTrabajador = '"+horas+"',"
+					+ "idTiendaFK1 = '"+tiendaSeleccionada+"',"
+					+ "jefeDeFK1 ='"+jefeX+"',"
+					+ "WHERE idTrabajador="+seleccion+";";
+			statement.executeUpdate(sentencia);
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error de SQL: "+sqle.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	private void ModificarFuncion(String seleccion) {
-		modificarF.setVisible(true);
 		modificarF.setVisible(true);
 		modificarF.setSize(600,200);
 		modificarF.setLocationRelativeTo(null);
@@ -98,8 +183,8 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 		panelDoble.setLayout(new GridLayout(1,3));
 		panelCentro1.setLayout(new FlowLayout());
 		panelCentro2.setLayout(new FlowLayout());
-		tiendas.addItem("Tienda1");
-		tiendas.addItem("Tienda2");
+		tiendas.addItem("Seleccione Tienda");
+		MeterDatos2();
 		modificarF.add(panelNorte, "North");
 		panelNorte.add(nombre);
 		panelNorte.add(nombreRespuesta);
@@ -121,19 +206,61 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 		panelCentro1.add(tienda);
 		panelCentro1.add(tiendas);
 		panelCentro2.add(modificar);
+		RellenarDatos(seleccion);
 		modificar.addActionListener(this);	
 		modificarF.addWindowListener(this);
+		modificarF.setVisible(true);
+	}
+	private void RellenarDatos(String seleccion) {
+		try
+		{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, login, password);
+			statement = connection.createStatement();
+			sentencia ="Select * from tiendapractica.trabajadores where idTrabajador = "+seleccion+" ;";
+			rs = statement.executeQuery(sentencia);
+			while(rs.next())
+			{			
+				String respuestasNombre = rs.getString("nombreTrabajador");
+				String respuestaApellido = rs.getString("apellidosTrabajador");
+				String respuestaNomina =rs.getString("nominaTrabajador");
+				String repuestaHorasTrabajo= rs.getInt("horasTrabajador")+"";
+				String respuestaTipoContrato = rs.getString("tipoContratoTrabajador");
+				int tiendaSeleccionada = rs.getInt("idTiendaFK1");
+				if(rs.getInt("jefeDeFK1")>0){
+					jefeSi.setState(true);
+					jefeSeleccionado.select(rs.getInt("jefeDeFK1")+1);
+
+				}else {
+					jefeNo.setState(true);
+				}
+				nombreRespuesta.setText(respuestasNombre);
+				apellidoRespuesta.setText(respuestaApellido);
+				nominaRespuesta.setText(respuestaNomina);
+				tipoContratoRespuesta.setText(repuestaHorasTrabajo);
+				horasContratoRespuesta.setText(respuestaTipoContrato);
+				MeterDatos3();
+				tiendas.select(tiendaSeleccionada+1);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error de SQL: "+sqle.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -149,25 +276,167 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
+	}
+	private String splitSeleccion(String selectedItem) {
+		String[] cosasElegidas = selectedItem.split(" - ");
+		String numeroElegido = cosasElegidas[0];
+		return numeroElegido;
+	}
+	private void MeterDatos2() {
+		sentencia="Select * from tiendapractica.tiendas;";
+		int datosChoice;
+		String nombreChoice;
+		try
+		{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, login, password);	
+			statement = connection.createStatement();
+			rs = statement.executeQuery(sentencia);
+			while (rs.next())
+			{
+				datosChoice =rs.getInt("idTienda");
+				nombreChoice = rs.getString("nombreTienda");
+				tiendas.addItem(datosChoice+" - "+nombreChoice);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		finally
+		{
+			Desconectar();
+		}			
 	}
 
+	private void MeterDatos() {
+		sentencia="Select * from tiendapractica.trabajadores;";
+		int datosChoice;
+		String nombreChoice;
+		try
+		{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, login, password);	
+			statement = connection.createStatement();
+			rs = statement.executeQuery(sentencia);
+			while (rs.next())
+			{
+				datosChoice =rs.getInt("idTrabajador");
+				nombreChoice = rs.getString("nombreTrabajador");
+				trabajador.addItem(datosChoice+" - "+nombreChoice);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		finally
+		{
+			Desconectar();
+		}			
+	}
+	private void Desconectar() {
+		try
+		{
+			if(connection!=null)
+			{
+				connection.close();
+			}
+		}
+		catch (SQLException e)
+		{
+			System.out.println("Error 3: "+e.getMessage());
+		}						
+	}
+
+	private void SeleccioneJefe() {
+		//Esto es el constructor
+		seleccioneJefe.setTitle("Seleccion de Jefe");
+		seleccioneJefe.setSize(300,200);
+		seleccioneJefe.setLocationRelativeTo(null);
+		seleccioneJefe.add(panelS);
+		panelS.add(especificar);
+		panelS.add(jefeSeleccionado);
+		jefeSeleccionado.addItem("Eliga una opcion");
+		elegido.addActionListener(this);
+		seleccioneJefe.addWindowListener(this);
+		seleccioneJefe.setVisible(true);
+	}
+	private void MeterDatos3() {
+		sentencia="Select * from tiendapractica.trabajadores";
+		int datosChoice;
+		String nombreChoice;
+		try
+		{
+			Conectar();
+			statement = connection.createStatement();
+			rs = statement.executeQuery(sentencia);
+			while (rs.next())
+			{
+				datosChoice =rs.getInt("idTrabajador");
+				nombreChoice = rs.getString("nombreTrabajador");
+				jefeSeleccionado.addItem(datosChoice+" - "+nombreChoice);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		}					
+	}
+	private void Conectar() {
+		try {
+			//Cargar los controladores para el acceso a la BD
+			Class.forName(driver);
+			//Establecer la conexión con la BD Empresa
+			connection = DriverManager.getConnection(url, login, password);	
+		}catch(ClassNotFoundException cnfe) {
+			System.out.println("Error 1: "+cnfe.getMessage());
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		}		
+	}
+	private void Registro() {
+		Calendar fechaRegistro = Calendar.getInstance();
+		Date fecha = fechaRegistro.getTime();
+		try {
+			FileWriter fw = new FileWriter("movimientos.log",true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter salida = new PrintWriter(bw);
+			salida.println("["+fecha+"] "+"["+"Administrador"+"]"+"[UPDATE FROM TRABAJADORES]");
+			salida.close();
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			System.out.println("Se produjo un error");
+		}						
+	}
 }

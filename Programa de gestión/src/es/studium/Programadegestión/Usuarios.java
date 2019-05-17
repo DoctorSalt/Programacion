@@ -17,7 +17,7 @@ public class Usuarios {
 	Usuarios(String usuario, String contraseña){
 		
 		String driver = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://localhost:3306/login?autoReconnect=true&useSSL=false";
+		String url = "jdbc:mysql://localhost:3306/tiendapractica?autoReconnect=true&useSSL=false";
 		String login = "remoto";
 		String password = "Studium2018;";
 		String sentencia;
@@ -35,13 +35,13 @@ public class Usuarios {
 			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
 						
 			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
-			sentencia ="select * from usuarios where nombreUsuario ='"+usuario+"'and claveUsuario='"+contraseña+"';";
+			sentencia ="select * from tiendapractica.usuarios where nombreUsuario ='"+usuario+"'and claveUsuario= MD5('"+contraseña+"');";
 			rs = statement.executeQuery(sentencia);
 			if(rs.next())
 			{
 				System.out.println("Registro OK");
 				Registro(usuario);
-				if(usuario.equals("admin")) {
+				if(usuario.equals("Admin")) {
 					Guardar(usuario);
 					VentanaAdmin va = new VentanaAdmin("Ventana Administrador");
 				}else{
