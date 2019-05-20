@@ -75,7 +75,7 @@ public class ConsultaTrabajadores extends Frame implements WindowListener, Actio
 
 		//TablaConsulta clientes 
 		TablaConsulta trabajadores=new TablaConsulta();
-		tablaRecogida =trabajadores.TablaConsulta(listaTrabajadoresTitulo, listaTrabajadoresBusqueda,nombreTabla);
+		tablaRecogida =trabajadores.tablaConsultaAplicacion(listaTrabajadoresTitulo, listaTrabajadoresBusqueda,nombreTabla);
 		JScrollPane tablaResultante=new JScrollPane(tablaRecogida);
 		tablaResultante.setPreferredSize(new Dimension(750, 200));
 		add(tablaResultante, BorderLayout.CENTER);

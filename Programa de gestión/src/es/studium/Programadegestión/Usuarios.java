@@ -26,27 +26,22 @@ public class Usuarios {
 		ResultSet rs = null;
 		try
 		{
-			//Cargar los controladores para el acceso a la BD
 			Class.forName(driver);
-			//Establecer la conexión con la BD Empresa
 			connection = DriverManager.getConnection(url, login, password);
-			//Crear una sentencia
 			statement = connection.createStatement();
-			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
-						
-			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
+			//Aqui comprobamos si el usuario es correcto respecto a su contraseña encriptada usando MD5
 			sentencia ="select * from tiendapractica.usuarios where nombreUsuario ='"+usuario+"'and claveUsuario= MD5('"+contraseña+"');";
 			rs = statement.executeQuery(sentencia);
 			if(rs.next())
 			{
-				System.out.println("Registro OK");
+				//En caso de que de correcto continuará
 				Registro(usuario);
 				if(usuario.equals("Admin")) {
 					Guardar(usuario);
-					VentanaAdmin va = new VentanaAdmin("Ventana Administrador");
+					VentanaAdmin va = new VentanaAdmin();
 				}else{
 					Guardar(usuario);
-					VentanaUsuario vu =new VentanaUsuario("Ventana Usuario");
+					VentanaUsuario vu =new VentanaUsuario();
 				}
 			}
 			else
@@ -81,11 +76,12 @@ public class Usuarios {
 	}
 
 	private void Error() {
+		//Manda de nuevo al inicio identificando que se ha producido un error
 		new ErrorRegistro();
 	}
 
 	private void Guardar(String usuario) {
-		//FileWriter también puede lanzar una excepción
+		//Aqui guardaremos el registro activo del usuario actual 
 		try
 		{
 			// Destino de los datos
@@ -107,15 +103,15 @@ public class Usuarios {
 		}		
 	}
 
-	private void Registro(String i) {
-		
+	private void Registro(String usuario) {
+		//Aqui guardamos el registro del usuario con su hora correspondiente
 		Calendar fechaRegistro = Calendar.getInstance();
 		Date fecha = fechaRegistro.getTime();
 		try {
 			FileWriter fw = new FileWriter("movimientos.log",true);
 			BufferedWriter bw = new BufferedWriter(fw);
 			PrintWriter salida = new PrintWriter(bw);
-			salida.println("["+fecha+"] "+"["+i+"]"+"[LOG IN ...]");
+			salida.println("["+fecha+"] "+"["+usuario+"]"+"[LOG IN ...]");
 			salida.close();
 			bw.close();
 			fw.close();

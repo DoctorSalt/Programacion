@@ -37,8 +37,8 @@ public class VentanaAdmin extends Frame implements WindowListener, ActionListene
 	Menu videojuegos = new Menu("Videojuegos");
 	Menu ayuda = new Menu ("Ayuda");
 
-	public VentanaAdmin(String t) {
-		setTitle(t);
+	public VentanaAdmin() {
+		setTitle("Ventana Administrador");
 		this.setVisible(true);
 		this.setSize(500,100);
 		this.setLocationRelativeTo(null);
@@ -85,10 +85,8 @@ public class VentanaAdmin extends Frame implements WindowListener, ActionListene
 		videojuegosConsulta.addActionListener(this);
 	}
 
-	public static void main(String[] args) {
-		VentanaAdmin va = new VentanaAdmin("Ventana Administrador");
-	}
-
+	//Aqui aparecen identificado todas las opciones que se tienen posibles 
+	//en el programa al ser el admin
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource().equals(trabajadoresAlta))
 		{	new AltaTrabajador("Alta Trabajador");

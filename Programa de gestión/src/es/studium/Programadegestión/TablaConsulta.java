@@ -11,15 +11,18 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class TablaConsulta {
+	//Este es el atributo de TablaConsulta que medira el tamaño de la cantidad de columnas que abrán
 	int tamano;
+	//Un array consiste en los nombres titulo que pondremos en la tabla
 	ArrayList<String> listaClientesTituloR;
+	//Este otro seran otros utilizados para buscar en la base de datos
 	ArrayList<String> listaClientesBusquedaR;
+	//Otro atributo este sirve para identificar
 	String nombreTablaR;
 
 	DefaultTableModel modelo = new DefaultTableModel();	
 
-	String t;	
-	public JTable TablaConsulta(ArrayList<String> listaClientesTitulo, ArrayList<String> listaClientesBusqueda, String nombreTabla) {
+	public JTable tablaConsultaAplicacion(ArrayList<String> listaClientesTitulo, ArrayList<String> listaClientesBusqueda, String nombreTabla) {
 		tamano=listaClientesTitulo.size();
 		listaClientesTituloR=listaClientesTitulo;
 		listaClientesBusquedaR=listaClientesBusqueda;
@@ -36,15 +39,10 @@ public class TablaConsulta {
 		ResultSet rs = null;
 		try
 		{
-			//Cargar los controladores para el acceso a la BD
 			String palabro="";
 			Class.forName(driver);
-			//Establecer la conexión con la BD Empresa
 			connection = DriverManager.getConnection(url, login, password);
-			//Crear una sentencia
 			statement = connection.createStatement();
-			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
-
 			Vector columnNames=new Vector();
 			
 			for(int i=0;i<tamano;i++) {
@@ -54,10 +52,13 @@ public class TablaConsulta {
 			modelo.setColumnIdentifiers(columnNames);
 			for(int i=0; i<tamano;i++) 
 			{
+				//Esto lo pongo para al escribir las columnas el primer registro
+				//Sin coma y los siguientes con ella
 				if(i==0) {
 				palabro=listaClientesBusquedaR.get(i);	
-				}
+				}else {
 				palabro= palabro+", "+listaClientesBusquedaR.get(i);					
+				}
 			}
 			sentencia = "Select "+palabro+" from tiendaPractica."+nombreTablaR+";";
 			rs = statement.executeQuery (sentencia);

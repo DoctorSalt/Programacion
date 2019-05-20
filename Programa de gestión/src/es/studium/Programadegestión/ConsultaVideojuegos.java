@@ -4,6 +4,7 @@ package es.studium.Programadegestión;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
@@ -65,7 +66,7 @@ public class ConsultaVideojuegos extends Frame implements WindowListener, Action
 		listaVideojuegosBusqueda.add("plataformaVideojuego");
 		//TablaConsulta clientes 
 		TablaConsulta videojuegos=new TablaConsulta();
-		tablaRecogida =videojuegos.TablaConsulta(listaVideojuegosTitulo, listaVideojuegosBusqueda,nombreTabla);
+		tablaRecogida =videojuegos.tablaConsultaAplicacion(listaVideojuegosTitulo, listaVideojuegosBusqueda,nombreTabla);
 		JScrollPane tablaResultante=new JScrollPane(tablaRecogida);
 		tablaResultante.setPreferredSize(new Dimension(550, 200));
 		add(tablaResultante, BorderLayout.CENTER);
@@ -131,51 +132,98 @@ public class ConsultaVideojuegos extends Frame implements WindowListener, Action
 
 	private void GuardarArchivo() {
 		Document documento = new Document();
-		try
-		{
-			// Se crea el OutputStream para el fichero donde queremos dejar el pdf.
-			FileOutputStream ficheroPdf = new FileOutputStream("Consulta_Videojuegos.pdf");
-			PdfWriter.getInstance(documento,ficheroPdf).setInitialLeading(20);
-			// Se abre el documento.
-			documento.open();
-			documento.addTitle("Tabla de Consulta de Videojuegos");
-			Paragraph titulo = new Paragraph();
-	        titulo.setAlignment(Paragraph.ALIGN_CENTER);
-	        titulo.setFont(FontFactory.getFont("Times New Roman", 24, Font.BOLD, BaseColor.BLACK));
-	        titulo.add("***LISTA DE VIDEOJUEGOS***");
-	        documento.add(titulo);
-	        Paragraph vacio1 = new Paragraph();
-	        vacio1.add("\n\n");
-	        documento.add(vacio1);	        
-			PdfPTable tabla = new PdfPTable(listaVideojuegosTitulo.size());
-			for (int i = 0; i < listaVideojuegosTitulo.size(); i++)
-			{
-				Paragraph registroT = new Paragraph();
-				registroT.setAlignment(Paragraph.ALIGN_JUSTIFIED);
-				registroT.setFont(FontFactory.getFont("Arial", 12, Font.BOLD));
-				registroT.add(listaVideojuegosTitulo.get(i));
-				tabla.addCell(registroT);
-			}
-			for(int i=0;i<tablaRecogida.getRowCount();i++) 
-			{
-				System.out.println(listaVideojuegosTitulo.size());
-				for(int a=0; a<listaVideojuegosTitulo.size();a++) 
+		FileDialog fd = new FileDialog(this, "Indicar nombre y ubicación del archivo",FileDialog.SAVE);
+		fd.setVisible(true);
+		if(fd.getFile().contains(".pdf")) {
+			try {
+				FileOutputStream ficheroPdf = new FileOutputStream(fd.getDirectory()+fd.getFile());
+				PdfWriter.getInstance(documento,ficheroPdf).setInitialLeading(20);
+				// Se abre el documento.
+				documento.open();
+				documento.addTitle("Tabla de Consulta de Videojuegos");
+				Paragraph titulo = new Paragraph();
+		        titulo.setAlignment(Paragraph.ALIGN_CENTER);
+		        titulo.setFont(FontFactory.getFont("Times New Roman", 24, Font.BOLD, BaseColor.BLACK));
+		        titulo.add("***LISTA DE VIDEOJUEGOS***");
+		        documento.add(titulo);
+		        Paragraph vacio1 = new Paragraph();
+		        vacio1.add("\n\n");
+		        documento.add(vacio1);	        
+				PdfPTable tabla = new PdfPTable(listaVideojuegosTitulo.size());
+				for (int i = 0; i < listaVideojuegosTitulo.size(); i++)
 				{
-					System.out.println((i+1)+":"+(a+1));
-					Paragraph registroC = new Paragraph();
-					registroC.setAlignment(Paragraph.ALIGN_JUSTIFIED);
-					registroC.setFont(FontFactory.getFont("Arial", 12));
-					registroC.add((String) tablaRecogida.getValueAt(i,a));
-					tabla.addCell(registroC);
+					Paragraph registroT = new Paragraph();
+					registroT.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+					registroT.setFont(FontFactory.getFont("Arial", 12, Font.BOLD));
+					registroT.add(listaVideojuegosTitulo.get(i));
+					tabla.addCell(registroT);
 				}
+				for(int i=0;i<tablaRecogida.getRowCount();i++) 
+				{
+					System.out.println(listaVideojuegosTitulo.size());
+					for(int a=0; a<listaVideojuegosTitulo.size();a++) 
+					{
+						System.out.println((i+1)+":"+(a+1));
+						Paragraph registroC = new Paragraph();
+						registroC.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+						registroC.setFont(FontFactory.getFont("Arial", 12));
+						registroC.add((String) tablaRecogida.getValueAt(i,a));
+						tabla.addCell(registroC);
+					}
+				}
+				documento.add(tabla);
+				documento.close();
 			}
-			documento.add(tabla);
-			documento.close();
+			catch ( Exception e )
+			{
+				e.printStackTrace();
+			}
+		}else {
+			try {
+				FileOutputStream ficheroPdf = new FileOutputStream(fd.getDirectory()+fd.getFile()+".pdf");
+				PdfWriter.getInstance(documento,ficheroPdf).setInitialLeading(20);
+				// Se abre el documento.
+				documento.open();
+				documento.addTitle("Tabla de Consulta de Videojuegos");
+				Paragraph titulo = new Paragraph();
+		        titulo.setAlignment(Paragraph.ALIGN_CENTER);
+		        titulo.setFont(FontFactory.getFont("Times New Roman", 24, Font.BOLD, BaseColor.BLACK));
+		        titulo.add("***LISTA DE VIDEOJUEGOS***");
+		        documento.add(titulo);
+		        Paragraph vacio1 = new Paragraph();
+		        vacio1.add("\n\n");
+		        documento.add(vacio1);	        
+				PdfPTable tabla = new PdfPTable(listaVideojuegosTitulo.size());
+				for (int i = 0; i < listaVideojuegosTitulo.size(); i++)
+				{
+					Paragraph registroT = new Paragraph();
+					registroT.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+					registroT.setFont(FontFactory.getFont("Arial", 12, Font.BOLD));
+					registroT.add(listaVideojuegosTitulo.get(i));
+					tabla.addCell(registroT);
+				}
+				for(int i=0;i<tablaRecogida.getRowCount();i++) 
+				{
+					System.out.println(listaVideojuegosTitulo.size());
+					for(int a=0; a<listaVideojuegosTitulo.size();a++) 
+					{
+						System.out.println((i+1)+":"+(a+1));
+						Paragraph registroC = new Paragraph();
+						registroC.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+						registroC.setFont(FontFactory.getFont("Arial", 12));
+						registroC.add((String) tablaRecogida.getValueAt(i,a));
+						tabla.addCell(registroC);
+					}
+				}
+				documento.add(tabla);
+				documento.close();
+			}
+			catch ( Exception e )
+			{
+				e.printStackTrace();
+			}
 		}
-		catch ( Exception e )
-		{
-			e.printStackTrace();
-		}
+		
 	}
 	private void Registro(String usuario) {
 		Calendar fechaRegistro = Calendar.getInstance();
@@ -215,8 +263,5 @@ public class ConsultaVideojuegos extends Frame implements WindowListener, Action
 		{
 			System.out.println("Se produjo un error de Archivo");
 		}
-
-
 	}
-
 }

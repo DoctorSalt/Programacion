@@ -62,10 +62,7 @@ public class Programa implements WindowListener, ActionListener{
 		login.addWindowListener(this);
 		logins.addActionListener(this);
 		limpia.addActionListener(this);
-		olvide.addActionListener(this);
-
-		//añado ventana de error de login
-		
+		olvide.addActionListener(this);		
 	}
 	public static void main(String[] args) {
 		Programa po = new Programa();
@@ -79,14 +76,16 @@ public class Programa implements WindowListener, ActionListener{
 		} else
 		if(logins.equals(arg0.getSource())){
 			//hay varios usuarios
-			//admin = Super, Yolo = 12345
+			//Admin = Super, Usuario = Suc123; 
 			String usuario=usuarioT.getText();
 			String clave=claveT.getText();
 			login.setVisible(false);
+			//Aqui hago la verificacion de la clave y el usuario
 			new Usuarios(usuario,clave);
 		} else
 		if(olvide.equals(arg0.getSource())){
 			new OlvideClave(null);
+			//Este se ejecuta en caso de que le demos al botón de  olvide la clave
 		}
 	}
 	@Override

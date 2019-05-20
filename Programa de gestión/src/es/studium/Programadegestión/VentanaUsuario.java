@@ -28,9 +28,9 @@ public class VentanaUsuario extends Frame implements WindowListener, ActionListe
 	Menu ayuda = new Menu ("Ayuda");
 	
 	
-	VentanaUsuario(String t)
+	VentanaUsuario()
 	{
-		setTitle(t);
+		setTitle("Ventana de Usuario");
 		this.setVisible(true);
 		this.setSize(500,100);
 		setLocationRelativeTo(null);
@@ -55,12 +55,6 @@ public class VentanaUsuario extends Frame implements WindowListener, ActionListe
 		videojuegosAlta.addActionListener(this);
 		ayudaAlta.addActionListener(this);
 	}
-	
-	public static void main(String[] args) {
-		new VentanaUsuario("Ventana de Usuario");
-
-	}
-
 	public void windowActivated(WindowEvent arg0) {      
 		
 	}
@@ -95,7 +89,7 @@ public class VentanaUsuario extends Frame implements WindowListener, ActionListe
 		// TODO Auto-generated method stub
 		
 	}
-
+	//Aqui solo aparecen las funcionalidades de alta, única disponible para los usuarios
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource().equals(trabajadoresAlta)){	
 			new AltaTrabajador("Alta Trabajador");
