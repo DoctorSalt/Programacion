@@ -30,7 +30,6 @@ import java.util.Date;
 public class AltaCliente extends Frame implements WindowListener, ActionListener{
 
 	private static final long serialVersionUID = 1L;
-
 	String nombreC;
 	String fechaC;
 	String puntosC;
