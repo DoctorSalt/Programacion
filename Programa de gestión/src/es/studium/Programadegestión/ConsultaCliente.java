@@ -56,7 +56,6 @@ public class ConsultaCliente  extends Frame implements WindowListener, ActionLis
 		setTitle("Consulta Cliente");
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
-
 		listaClientesTitulo.add("IdCliente");
 		listaClientesBusqueda.add("idCliente");
 		listaClientesTitulo.add("Nombre");

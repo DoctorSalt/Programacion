@@ -48,15 +48,13 @@ public class BajaVideojuegos extends Frame implements WindowListener, ActionList
 	java.sql.Statement statement = null;
 	ResultSet rs = null;
 
-	BajaVideojuegos(String t){
-		setVisible(true);
-		setTitle(t);
+	BajaVideojuegos(){
+		setTitle("Baja Videojuego");
 		setSize(270,150);
 		setLayout(new GridLayout(2,1));
 		setLocationRelativeTo(null);
 		panel.setLayout(new FlowLayout());
 		panel1.setLayout(new FlowLayout());
-
 		add(panel);
 		add(panel1);
 		panel.add(videojuego);
@@ -65,8 +63,87 @@ public class BajaVideojuegos extends Frame implements WindowListener, ActionList
 		MeterDatos();
 		addWindowListener(this);
 		aceptar.addActionListener(this);
+		setVisible(true);
 	}
 
+	
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(aceptar)) {
+			if(videojuego.getSelectedItem().equals("Elija uno")) {
+				System.out.println("Elija una opcion");
+			}
+			else {
+			muerteConfirmar.setVisible(true);
+			muerteConfirmar.setTitle("Baja Videojuego");
+			muerteConfirmar.setSize(270,100);
+			muerteConfirmar.setLocationRelativeTo(null);
+			muerteConfirmar.setLayout(new FlowLayout());
+			muerteConfirmar.add(seguro);
+			muerteConfirmar.add(seguroSi);
+			muerteConfirmar.add(seguroNo);
+			muerteConfirmar.addWindowListener(this);
+			seguroSi.addActionListener(this);
+			seguroNo.addActionListener(this);
+			}
+		}else if(e.getSource().equals(seguroSi)) {
+			muerteConfirmar.setVisible(false);
+			ProcesoDeEliminado();
+			Registro();
+			ReajusteChoice();
+		}else if(e.getSource().equals(seguroNo)) {
+			//Vuelve
+			muerteConfirmar.setVisible(false);
+		}		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		if(this.isActive()) {
+			setVisible(false);
+		}
+		if(muerteConfirmar.isActive()) {
+			muerteConfirmar.setVisible(false);
+		}
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+	
 	private void MeterDatos() {
 		sentencia="Select * from tiendapractica.videojuegos";
 		int datosChoice;
@@ -122,41 +199,7 @@ public class BajaVideojuegos extends Frame implements WindowListener, ActionList
 			System.out.println("Error 2: "+sqle.getMessage());
 		}					
 	}
-
-	public static void main (String[] args) {
-		new BajaVideojuegos("Baja Videojuego");
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(aceptar)) {
-			if(videojuego.getSelectedItem().equals("Elija uno")) {
-				System.out.println("Elija una opcion");
-			}
-			else {
-			muerteConfirmar.setVisible(true);
-			muerteConfirmar.setTitle("Baja Videojuego");
-			muerteConfirmar.setSize(270,100);
-			muerteConfirmar.setLocationRelativeTo(null);
-			muerteConfirmar.setLayout(new FlowLayout());
-			muerteConfirmar.add(seguro);
-			muerteConfirmar.add(seguroSi);
-			muerteConfirmar.add(seguroNo);
-			muerteConfirmar.addWindowListener(this);
-			seguroSi.addActionListener(this);
-			seguroNo.addActionListener(this);
-			}
-		}else if(e.getSource().equals(seguroSi)) {
-			muerteConfirmar.setVisible(false);
-			ProcesoDeEliminado();
-			Registro();
-			ReajusteChoice();
-		}else if(e.getSource().equals(seguroNo)) {
-			//Vuelve
-			muerteConfirmar.setVisible(false);
-		}		
-	}
-
+	
 	private void ReajusteChoice() {
 		videojuego.remove(videojuego.getSelectedItem());
 	}
@@ -202,19 +245,7 @@ public class BajaVideojuegos extends Frame implements WindowListener, ActionList
 		}
 		finally
 		{
-			try
-			{
-				if(connection!=null)
-				{
-					rs.close();
-					statement.close();
-					connection.close();
-				}
-			}
-			catch (SQLException e)
-			{
-				System.out.println("Error al cerrar SQL: "+e.getMessage());
-			}
+			Desconectar();
 		}		
 	}
 
@@ -222,51 +253,5 @@ public class BajaVideojuegos extends Frame implements WindowListener, ActionList
 		String[] cosasElegidas = elegido.split(" - ");
 		String numeroElegido = cosasElegidas[0];
 		return numeroElegido;
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		if(this.isActive()) {
-			setVisible(false);
-		}
-		if(muerteConfirmar.isActive()) {
-			muerteConfirmar.setVisible(false);
-		}
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 }

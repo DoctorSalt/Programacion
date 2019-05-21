@@ -68,7 +68,7 @@ private static final long serialVersionUID = 1L;
 	
 	
 	
-	public ModificacionCliente(String string) {
+	public ModificacionCliente() {
 		setTitle("Modificacion Cliente");
 		setSize(300,150);
 		setLayout(new GridLayout(2,1));
@@ -129,10 +129,7 @@ private static final long serialVersionUID = 1L;
 			System.out.println("Error 3: "+e.getMessage());
 		}				
 	}
-	public static void main(String[] args) {
-		new ModificacionCliente("Modificacion Clientes");
 
-	}
 	@Override	
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource().equals(aceptar)) {
@@ -256,19 +253,7 @@ private static final long serialVersionUID = 1L;
 		}
 		finally
 		{
-			try
-			{
-				if(connection!=null)
-				{
-					rs.close();
-					statement.close();
-					connection.close();
-				}
-			}
-			catch (SQLException e)
-			{
-				System.out.println("Error al cerrar SQL: "+e.getMessage());
-			}
+			Desconectar();
 		}
 	}
 	private String americanoEspanol(String fechaV1) {
@@ -305,19 +290,7 @@ private static final long serialVersionUID = 1L;
 		}
 		finally
 		{
-			try
-			{
-				if(connection!=null)
-				{
-					rs.close();
-					statement.close();
-					connection.close();
-				}
-			}
-			catch (SQLException e)
-			{
-				System.out.println("Error al cerrar SQL: "+e.getMessage());
-			}
+			Desconectar();
 		}
 	}
 	private String splitSeleccion(String selectedItem) {

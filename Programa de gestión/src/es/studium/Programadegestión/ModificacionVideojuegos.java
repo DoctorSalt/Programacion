@@ -67,10 +67,9 @@ public class ModificacionVideojuegos extends Frame implements WindowListener, Ac
 	java.sql.Statement statement = null;
 	ResultSet rs = null;
 	
-	public ModificacionVideojuegos(String t) {
-		setVisible(true);
+	public ModificacionVideojuegos() {
 		setSize(350,200);
-		setTitle(t);
+		setTitle("Modificacion Videojuegos");
 		setLayout(new GridLayout(2,1));
 		setLocationRelativeTo(null);
 		panelPrincipal1.setLayout(new FlowLayout());
@@ -83,59 +82,10 @@ public class ModificacionVideojuegos extends Frame implements WindowListener, Ac
 		MeterDatos();
 		addWindowListener(this);
 		aceptar.addActionListener(this);
+		setVisible(true);
 	}
 
 
-	private void MeterDatos() {
-		sentencia="Select * from tiendapractica.videojuegos;";
-		int datosChoice;
-		String nombreChoice;
-		try
-		{
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, login, password);	
-			statement = connection.createStatement();
-			rs = statement.executeQuery(sentencia);
-			while (rs.next())
-			{
-				datosChoice =rs.getInt("idVideojuego");
-				nombreChoice = rs.getString("nombeVideojuego");
-				videojuegos.addItem(datosChoice+" - "+nombreChoice);
-			}
-		}
-		catch (SQLException sqle)
-		{
-			System.out.println("Error 2: "+sqle.getMessage());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		finally
-		{
-			Desconectar();
-		}			
-	}
-
-
-	private void Desconectar() {
-		try
-		{
-			if(connection!=null)
-			{
-				connection.close();
-			}
-		}
-		catch (SQLException e)
-		{
-			System.out.println("Error 3: "+e.getMessage());
-		}						
-	}
-
-
-	public static void main(String[] args) {
-		new ModificacionVideojuegos("Modificacion Videojuegos");
-	}
 	
 	
 	@Override
@@ -154,35 +104,6 @@ public class ModificacionVideojuegos extends Frame implements WindowListener, Ac
 			JOptionPane.showMessageDialog (null, "El dato ha sido modificado", "Modificado", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
-
-	private void ModificarFuncion(String seleccion) {
-		modificarF.setTitle("Modificar Videojuego");
-		modificarF.setLocationRelativeTo(null);
-		modificarF.setSize(300,200);
-		modificarF.setLayout(new GridLayout(4,1));
-		panel1.setLayout(new FlowLayout());
-		panel2.setLayout(new FlowLayout());
-		panel3.setLayout(new FlowLayout());
-		panel4.setLayout(new FlowLayout());
-		DatosCompletos(seleccion);
-		modificarF.add(panel1);
-		panel1.add(nombre);
-		panel1.add(respuestaNombre);
-		modificarF.add(panel2);
-		panel2.add(generos);
-		panel2.add(respuestaGeneros);
-		modificarF.add(panel3);
-		panel3.add(plataforma);
-		panel3.add(respuestaPlataforma);
-		modificarF.add(panel4);
-		panel4.add(modificar);
-		modificarF.setResizable(false);
-		modificarF.addWindowListener(this);
-		modificar.addActionListener(this);
-		limpiar.addActionListener(this);
-		modificarF.setVisible(true);
-	}
-
 
 	@Override
 	public void windowActivated(WindowEvent arg0) {
@@ -235,6 +156,83 @@ public class ModificacionVideojuegos extends Frame implements WindowListener, Ac
 		String numeroElegido = cosasElegidas[0];
 		return numeroElegido;
 	}
+	private void MeterDatos() {
+		sentencia="Select * from tiendapractica.videojuegos;";
+		int datosChoice;
+		String nombreChoice;
+		try
+		{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, login, password);	
+			statement = connection.createStatement();
+			rs = statement.executeQuery(sentencia);
+			while (rs.next())
+			{
+				datosChoice =rs.getInt("idVideojuego");
+				nombreChoice = rs.getString("nombeVideojuego");
+				videojuegos.addItem(datosChoice+" - "+nombreChoice);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		finally
+		{
+			Desconectar();
+		}			
+	}
+
+
+	private void Desconectar() {
+		try
+		{
+			if(connection!=null)
+			{
+				connection.close();
+			}
+		}
+		catch (SQLException e)
+		{
+			System.out.println("Error 3: "+e.getMessage());
+		}						
+	}
+
+
+	private void ModificarFuncion(String seleccion) {
+		modificarF.setTitle("Modificar Videojuego");
+		modificarF.setLocationRelativeTo(null);
+		modificarF.setSize(300,200);
+		modificarF.setLayout(new GridLayout(4,1));
+		panel1.setLayout(new FlowLayout());
+		panel2.setLayout(new FlowLayout());
+		panel3.setLayout(new FlowLayout());
+		panel4.setLayout(new FlowLayout());
+		DatosCompletos(seleccion);
+		modificarF.add(panel1);
+		panel1.add(nombre);
+		panel1.add(respuestaNombre);
+		modificarF.add(panel2);
+		panel2.add(generos);
+		panel2.add(respuestaGeneros);
+		modificarF.add(panel3);
+		panel3.add(plataforma);
+		panel3.add(respuestaPlataforma);
+		modificarF.add(panel4);
+		panel4.add(modificar);
+		modificarF.setResizable(false);
+		modificarF.addWindowListener(this);
+		modificar.addActionListener(this);
+		limpiar.addActionListener(this);
+		modificarF.setVisible(true);
+	}
+
+	
+	
 	
 	private void DatosCompletos(String seleccion) {
 		try

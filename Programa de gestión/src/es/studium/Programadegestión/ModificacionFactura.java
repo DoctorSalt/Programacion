@@ -12,6 +12,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -30,7 +40,6 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 	
 	TextField fechaRespuesta = new TextField("Dia/Mes/Año");
 	Choice clienteRespuesta = new Choice();
-	Choice trabajadorRespuesta = new Choice();
 	
 	Button modificar = new Button("Modificar");
 	
@@ -45,9 +54,21 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 	Panel panel3 = new Panel();
 	Panel panel4 = new Panel();
 	
-	public ModificacionFactura(String t) {
-		setVisible(true);
-		setTitle(t);
+	
+	String login = "admin";
+	String driver = "com.mysql.jdbc.Driver";
+	String url = "jdbc:mysql://localhost:3306/tiendaPractica?autoReconnect=true&useSSL=false";
+	
+	String password = "Studium2018;";
+	String sentencia;
+	Connection connection = null;
+	java.sql.Statement statement = null;
+	ResultSet rs = null;
+	
+	String seleccion;
+	
+	public ModificacionFactura() {
+		setTitle("Modificacion Factura");
 		setSize(350,200);
 		setLayout(new GridLayout(2,1));
 		setLocationRelativeTo(null);
@@ -58,24 +79,57 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 		panelPrincipal1.add(facturas);
 		panelPrincipal2.add(aceptar);
 		facturas.addItem("Eliga una factura");
+		MeterDatos();
 		addWindowListener(this);
 		aceptar.addActionListener(this);	
+		setVisible(true);
 		}
-
-	public static void main(String[] args) {
-		new ModificacionFactura("Modificacion Factura");
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(aceptar)) {
-			String seleccion=facturas.getSelectedItem();
-			ModificarFuncion(seleccion);
+			if(facturas.getSelectedItem().equals("Eliga una factura")) {
+				JOptionPane.showMessageDialog (null, "Eliga una factura", "Continuar", JOptionPane.INFORMATION_MESSAGE);
+			}else {
+				seleccion=splitSeleccion(facturas.getSelectedItem());
+				ModificarFuncion(seleccion);
+			}
+			
 		}else if(e.getSource().equals(modificar)) {
 			//Colocar funcion que modifique cosas TRABAJA EN ESTO
+			if(clienteRespuesta.getSelectedItem().equals("Eliga un Cliente")) {
+				JOptionPane.showMessageDialog (null, "Eliga un cliente", "Continuar", JOptionPane.INFORMATION_MESSAGE);
+			}
+			ProcesoModificacion(seleccion);
+			Registro();			
 			JOptionPane.showMessageDialog (null, "El dato ha sido modificado", "Modificado", JOptionPane.INFORMATION_MESSAGE);
 		}
-		
+	}
+
+	private void ProcesoModificacion(String seleccion2) {
+		String fechaCompraRespuesta =americano(fechaRespuesta.getText());
+		String clienteSeleccionadoRespuesta = splitSeleccion(clienteRespuesta.getSelectedItem());
+		try
+		{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, login, password);
+			statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);			
+			sentencia ="UPDATE facturas SET fechaCompra = '"+fechaCompraRespuesta+"',"
+					+ "idClienteFK2 = "+clienteSeleccionadoRespuesta+" "
+					+ "WHERE idFactura="+seleccion+";";
+			statement.executeUpdate(sentencia);
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error de SQL: "+sqle.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally
+		{
+			Desconectar();
+		}		
 	}
 
 	private void ModificarFuncion(String seleccion) {
@@ -95,19 +149,44 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 		panel2.add(cliente);
 		panel2.add(clienteRespuesta);
 		modificarF.add(panel3);
-		panel3.add(trabajador);
-		panel3.add(trabajadorRespuesta);
 		modificarF.add(panel4);
 		panel4.add(modificar);
-		clienteRespuesta.addItem("");
-		clienteRespuesta.addItem("cliente1");
-		clienteRespuesta.addItem("cliente2");
-		trabajadorRespuesta.addItem("");
-		trabajadorRespuesta.addItem("trabajador1");
-		trabajadorRespuesta.addItem("trabajador2");
+		clienteRespuesta.addItem("Eliga un Cliente");
+		MeterDatos2();
 		modificar.addActionListener(this);
-		modificarF.addWindowListener(this);	
-		
+		modificarF.addWindowListener(this);
+		RellenarDatos(seleccion);		
+	}
+
+	private void MeterDatos2() {
+		sentencia="Select * from tiendapractica.clientes;";
+		int datosChoice;
+		String nombreChoice;
+		try
+		{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, login, password);	
+			statement = connection.createStatement();
+			rs = statement.executeQuery(sentencia);
+			while (rs.next())
+			{
+				datosChoice =rs.getInt("idCliente");
+				nombreChoice = rs.getString("nombreCliente");
+				clienteRespuesta.addItem(datosChoice+" - "+nombreChoice);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		finally
+		{
+			Desconectar();
+		}		
 	}
 
 	@Override
@@ -154,5 +233,111 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void Registro() {
+		Calendar fechaRegistro = Calendar.getInstance();
+		Date fecha = fechaRegistro.getTime();
+		try {
+			FileWriter fw = new FileWriter("movimientos.log",true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter salida = new PrintWriter(bw);
+			salida.println("["+fecha+"] "+"["+"Administrador"+"]"+"[UPDATE FROM FACTURAS]");
+			salida.close();
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			System.out.println("Se produjo un error");
+		}						
+	}
+	
+	private String splitSeleccion(String selectedItem) {
+		String[] cosasElegidas = selectedItem.split(" - ");
+		String numeroElegido = cosasElegidas[0];
+		return numeroElegido;
+	}
+	
+	private String americanoEspanol(String fechaV1) {
+		String[] fecha = fechaV1.split("-");
+		String fechaV2 =fecha[2]+"/"+fecha[1]+"/"+fecha[0];
+		return fechaV2;
+	}
+	private String americano(String fechaV1) {
+		String[] fecha = fechaV1.split("/");
+		String fechaV2 =fecha[2]+"-"+fecha[1]+"-"+fecha[0];
+		return fechaV2;
+	}
+	
+	private void MeterDatos() {
+		sentencia="Select * from tiendapractica.facturas;";
+		int datosChoice;
+		String nombreChoice;
+		try
+		{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, login, password);	
+			statement = connection.createStatement();
+			rs = statement.executeQuery(sentencia);
+			while (rs.next())
+			{
+				datosChoice =rs.getInt("idFactura");
+				nombreChoice = americanoEspanol(rs.getString("fechaCompra"));
+				facturas.addItem(datosChoice+" - "+nombreChoice);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		finally
+		{
+			Desconectar();
+		}						
+	}
+	
+	private void Desconectar() {
+		try
+		{
+			if(connection!=null)
+			{
+				connection.close();
+			}
+		}
+		catch (SQLException e)
+		{
+			System.out.println("Error 3: "+e.getMessage());
+		}				
+	}
+	private void RellenarDatos(String seleccion) {
+		try
+		{
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, login, password);
+			statement = connection.createStatement();
+			sentencia ="Select * from tiendapractica.facturas where idFactura = "+seleccion+" ;";
+			rs = statement.executeQuery(sentencia);
+			while(rs.next())
+			{
+				String fechaCompraRespuesta =americanoEspanol(rs.getString("fechaCompra"));
+				int clienteRespuestas = rs.getInt("idClienteFK2");
+				fechaRespuesta.setText(fechaCompraRespuesta);
+				clienteRespuesta.select(clienteRespuestas);
+			}
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error de SQL: "+sqle.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally
+		{
+			Desconectar();
+		}
 	}
 }

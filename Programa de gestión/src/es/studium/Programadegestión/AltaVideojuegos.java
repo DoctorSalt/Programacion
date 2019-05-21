@@ -61,12 +61,12 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 	Panel panel3 = new Panel(new FlowLayout());
 	Panel panel4 = new Panel(new FlowLayout());
 	
-	AltaVideojuegos(String t){
-		this.setTitle("Alta Videojuegos");
-		this.setLocationRelativeTo(null);
-		this.setSize(300,200);
-		this.setLayout(new GridLayout(4,1));
-		this.setResizable(false);
+	AltaVideojuegos(){
+		setTitle("Alta Videojuegos");
+		setLocationRelativeTo(null);
+		setSize(300,200);
+		setLayout(new GridLayout(4,1));
+		setResizable(false);
 		add(panel1);
 		panel1.add(nombre);
 		panel1.add(respuestaNombre);
@@ -83,10 +83,6 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 		alta.addActionListener(this);
 		limpiar.addActionListener(this);	
 		this.setVisible(true);
-	}
-	
-	public static void main(String[] args) {
-		new AltaVideojuegos("Alta Videojuegos");
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -115,6 +111,73 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 			incorrecto.setVisible(false);
 		}
 	}
+
+
+	private void Correcto() {
+		correcto.setVisible(true);
+		correcto.setLocationRelativeTo(null);
+		correcto.setSize(100,100);
+		correcto.setLayout(new FlowLayout());
+		correcto.setResizable(false);
+		correcto.add(bien);
+		correcto.add(aceptar1);
+		correcto.addWindowListener(this);
+		aceptar1.addActionListener(this);
+	}
+
+	private void Incorrecto() {
+		incorrecto.setVisible(true);
+		incorrecto.setLocationRelativeTo(null);
+		incorrecto.setSize(250,100);
+		incorrecto.setLayout(new FlowLayout());
+		incorrecto.add(mal);
+		incorrecto.add(aceptar2);
+		incorrecto.addWindowListener(this);
+		aceptar2.addActionListener(this);
+	}
+
+	public void windowActivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void windowClosed(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void windowClosing(WindowEvent arg0) {
+		if(this.isActive()) {
+			setVisible(false);
+		}
+		if(correcto.isActive()) {
+			correcto.setVisible(false);
+		}
+		if(incorrecto.isActive()) {
+			incorrecto.setVisible(false);
+		}
+	}
+
+	public void windowDeactivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void windowDeiconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void windowIconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void windowOpened(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	private void ProcesosDeRegistro() {
 		String login = "";
 		if(usuario=="admin") {
@@ -220,70 +283,4 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 			System.out.println("Se produjo un error de Archivo");
 		}		
 	}
-
-	private void Correcto() {
-		correcto.setVisible(true);
-		correcto.setLocationRelativeTo(null);
-		correcto.setSize(100,100);
-		correcto.setLayout(new FlowLayout());
-		correcto.setResizable(false);
-		correcto.add(bien);
-		correcto.add(aceptar1);
-		correcto.addWindowListener(this);
-		aceptar1.addActionListener(this);
-	}
-
-	private void Incorrecto() {
-		incorrecto.setVisible(true);
-		incorrecto.setLocationRelativeTo(null);
-		incorrecto.setSize(250,100);
-		incorrecto.setLayout(new FlowLayout());
-		incorrecto.add(mal);
-		incorrecto.add(aceptar2);
-		incorrecto.addWindowListener(this);
-		aceptar2.addActionListener(this);
-	}
-
-	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void windowClosed(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void windowClosing(WindowEvent arg0) {
-		if(this.isActive()) {
-			setVisible(false);
-		}
-		if(correcto.isActive()) {
-			correcto.setVisible(false);
-		}
-		if(incorrecto.isActive()) {
-			incorrecto.setVisible(false);
-		}
-	}
-
-	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

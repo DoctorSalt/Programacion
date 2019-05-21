@@ -89,39 +89,39 @@ public class VentanaAdmin extends Frame implements WindowListener, ActionListene
 	//en el programa al ser el admin
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource().equals(trabajadoresAlta))
-		{	new AltaTrabajador("Alta Trabajador");
+		{	new AltaTrabajador();
 		}else if(arg0.getSource().equals(clientesAlta)){
-			new AltaCliente("Alta Cliente");
+			new AltaCliente();
 		}else if(arg0.getSource().equals(facturasAlta)){
-			new AltaFactura("Alta Factura");
+			new AltaFactura();
 		}else if(arg0.getSource().equals(videojuegosAlta)){
-			new AltaVideojuegos("Alta Videojuego");
+			new AltaVideojuegos();
 		}else if(arg0.getSource().equals(ayudaAlta)){
 			new AyudaAdmin("Ayuda Adminisitrador");
 		}else if(arg0.getSource().equals(trabajadoresModificacion)) {
-			new ModificacionTrabajador("Modificacion Trabajador");
+			new ModificacionTrabajador();
 		}else if(arg0.getSource().equals(trabajadoresBaja)) {
-			new BajaTrabajador("Baja Trabajador");
+			new BajaTrabajador();
 		}else if(arg0.getSource().equals(trabajadoresConsulta)){
 			new ConsultaTrabajadores();
 		}else if(arg0.getSource().equals(clientesModificacion)) {
-			new ModificacionCliente("Modificacion Cliente");
+			new ModificacionCliente();
 		}else if(arg0.getSource().equals(clientesBaja)) {
-			new BajaCliente("Baja Cliente");
+			new BajaCliente();
 		}else if(arg0.getSource().equals(clientesConsulta)) {
 			new ConsultaCliente();
 		}else if(arg0.getSource().equals(facturaModificacion)) {
-			new ModificacionFactura("Modificación Factura");
+			new ModificacionFactura();
 		}else if(arg0.getSource().equals(facturaBaja)) {
-			new BajaFactura("Baja Factura");
+			new BajaFactura();
 		}else if(arg0.getSource().equals(facturaConsulta)) {
 			new ConsultaFactura();
 		}else if(arg0.getSource().equals(videojuegosModificacion)){
-			new ModificacionVideojuegos("Modificacion Videojuego");
+			new ModificacionVideojuegos();
 		}else if(arg0.getSource().equals(videojuegosConsulta))	{
 			new ConsultaVideojuegos();
 		}else if(arg0.getSource().equals(videojuegosBaja))	{
-			new BajaVideojuegos("Baja Videojuego");
+			new BajaVideojuegos();
 		}
 	}
 

@@ -61,7 +61,7 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 	Panel panel2 = new Panel();
 	Panel panel3 = new Panel();
 
-	AltaCliente(String t) {
+	AltaCliente() {
 		setTitle("Alta Cliente");
 		setVisible(true);
 		setSize(250,250);
@@ -87,11 +87,6 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 		alta.addActionListener(this);
 		limpiar.addActionListener(this);
 		this.addWindowListener(this);
-	}
-
-	public static void main(String[] args) {
-		new AltaCliente("Alta Clientes");
-
 	}
 
 	public void actionPerformed(ActionEvent arg0) {

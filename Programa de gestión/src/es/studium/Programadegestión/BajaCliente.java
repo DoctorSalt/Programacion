@@ -47,9 +47,7 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 	java.sql.Statement statement = null;
 	ResultSet rs = null;
 	
-	public BajaCliente(String t) {
-		setTitle(t);
-		setVisible(true);
+	public BajaCliente() {
 		setTitle("Baja Cliente");
 		setSize(300,150);
 		setLayout(new GridLayout(2,1));
@@ -64,6 +62,7 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 		MeterDatos();
 		addWindowListener(this);
 		aceptar.addActionListener(this);	
+		setVisible(true);
 	}
 
 	private void MeterDatos() {
@@ -122,10 +121,6 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 		}				
 	}
 
-	public static void main (String[] args) {
-		new BajaCliente("Baja Cliente");
-	}
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(aceptar)) {
@@ -155,6 +150,52 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 		
 	}
 
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		if(this.isActive()) {
+			setVisible(false);
+		}
+		if(muerteConfirmar.isActive()) {
+			muerteConfirmar.setVisible(false);
+		}
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	private void ProcesoEliminacion() {
 		String seleccionado = SplitElegido(cliente.getSelectedItem());
 		try
@@ -220,52 +261,6 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 		} catch (IOException e) {
 			System.out.println("Se produjo un error");
 		}				
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		if(this.isActive()) {
-			setVisible(false);
-		}
-		if(muerteConfirmar.isActive()) {
-			muerteConfirmar.setVisible(false);
-		}
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

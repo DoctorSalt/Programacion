@@ -92,13 +92,13 @@ public class VentanaUsuario extends Frame implements WindowListener, ActionListe
 	//Aqui solo aparecen las funcionalidades de alta, única disponible para los usuarios
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource().equals(trabajadoresAlta)){	
-			new AltaTrabajador("Alta Trabajador");
+			new AltaTrabajador();
 		}else if(arg0.getSource().equals(clientesAlta)){
-			new AltaCliente("Alta Cliente");
+			new AltaCliente();
 		}else if(arg0.getSource().equals(facturasAlta)){
-			new AltaFactura("Alta Factura");
+			new AltaFactura();
 		}else if(arg0.getSource().equals(videojuegosAlta)){
-			new AltaVideojuegos("Alta Videojuegos");
+			new AltaVideojuegos();
 		}else if(arg0.getSource().equals(ayudaAlta)){
 			new AyudaUsuario("Ayuda Usuario");
 		}

@@ -91,8 +91,8 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 
 	private static final long serialVersionUID = 1L;
 
-	public AltaTrabajador(String t) {
-		setTitle(t);
+	public AltaTrabajador() {
+		setTitle("Alta Trabajador");
 		this.setVisible(true);
 		this.setSize(600,200);
 		setLocationRelativeTo(null);
@@ -193,10 +193,6 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 			incorrecto();
 			System.out.println("Error 2: "+sqle.getMessage());
 		}		
-	}
-
-	public static void main(String[] args) {
-		new AltaTrabajador("Alta Trabajador");
 	}
 
 	public void actionPerformed(ActionEvent arg0) {

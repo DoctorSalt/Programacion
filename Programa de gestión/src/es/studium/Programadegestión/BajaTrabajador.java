@@ -47,8 +47,8 @@ public class BajaTrabajador extends Frame implements WindowListener, ActionListe
 	java.sql.Statement statement = null;
 	ResultSet rs = null;
 	
-	BajaTrabajador(String t){
-		setTitle(t);
+	BajaTrabajador(){
+		setTitle("Baja Trabajador");
 		setSize(300,250);
 		setLayout(new GridLayout(2,1));
 		setLocationRelativeTo(null);
@@ -64,6 +64,78 @@ public class BajaTrabajador extends Frame implements WindowListener, ActionListe
 		aceptar.addActionListener(this);
 		setVisible(true);
 	}
+	
+	
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(aceptar)) {
+			muerteConfirmar.setVisible(true);
+			muerteConfirmar.setTitle("Baja Trabajador");
+			muerteConfirmar.setLocationRelativeTo(null);
+			muerteConfirmar.setSize(270,100);
+			muerteConfirmar.setLayout(new FlowLayout());
+			if(trabajador.getSelectedItem().equals("Seleccione un trabajador")) {
+				System.out.println("Seleccione un trabajador");
+			}else {
+				muerteConfirmar.add(seguro);
+				muerteConfirmar.add(seguroSi);
+				muerteConfirmar.add(seguroNo);
+				muerteConfirmar.addWindowListener(this);
+				seguroSi.addActionListener(this);
+				seguroNo.addActionListener(this);
+			}
+		}else if(e.getSource().equals(seguroSi)) {
+			//Elimina
+			muerteConfirmar.setVisible(false);
+			ProcesoEliminacion();
+			Registro();
+			ReajusteChoice();
+		}else if(e.getSource().equals(seguroNo)) {
+			//Vuelve
+			muerteConfirmar.setVisible(false);
+		}				
+	}
+
+	
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void windowClosing(WindowEvent e) {
+		if(this.isActive()) {
+			setVisible(false);
+		}
+		if(muerteConfirmar.isActive()) {
+			muerteConfirmar.setVisible(false);
+		}
+	}
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	private void MeterDatos() {
 		sentencia="Select * from tiendapractica.trabajadores";
 		int datosChoice;
@@ -119,40 +191,7 @@ public class BajaTrabajador extends Frame implements WindowListener, ActionListe
 			System.out.println("Error 2: "+sqle.getMessage());
 		}				
 	}
-
 	
-	public static void main (String[] args) {
-		new BajaTrabajador("Baja Trabajador");
-	}
-	
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(aceptar)) {
-			muerteConfirmar.setVisible(true);
-			muerteConfirmar.setTitle("Baja Trabajador");
-			muerteConfirmar.setLocationRelativeTo(null);
-			muerteConfirmar.setSize(270,100);
-			muerteConfirmar.setLayout(new FlowLayout());
-			if(trabajador.getSelectedItem().equals("Seleccione un trabajador")) {
-				System.out.println("Seleccione un trabajador");
-			}else {
-				muerteConfirmar.add(seguro);
-				muerteConfirmar.add(seguroSi);
-				muerteConfirmar.add(seguroNo);
-				muerteConfirmar.addWindowListener(this);
-				seguroSi.addActionListener(this);
-				seguroNo.addActionListener(this);
-			}
-		}else if(e.getSource().equals(seguroSi)) {
-			//Elimina
-			muerteConfirmar.setVisible(false);
-			ProcesoEliminacion();
-			Registro();
-			ReajusteChoice();
-		}else if(e.getSource().equals(seguroNo)) {
-			//Vuelve
-			muerteConfirmar.setVisible(false);
-		}				
-	}
 	private void ProcesoEliminacion() {
 		String seleccionado = SplitElegido(trabajador.getSelectedItem());
 		try
@@ -218,46 +257,5 @@ public class BajaTrabajador extends Frame implements WindowListener, ActionListe
 		} catch (IOException e) {
 			System.out.println("Se produjo un error");
 		}				
-	}
-	
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowClosing(WindowEvent e) {
-		if(this.isActive()) {
-			setVisible(false);
-		}
-		if(muerteConfirmar.isActive()) {
-			muerteConfirmar.setVisible(false);
-		}
-	}
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+	}	
 }

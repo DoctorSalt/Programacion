@@ -48,8 +48,8 @@ public class BajaFactura extends Frame implements WindowListener, ActionListener
 		java.sql.Statement statement = null;
 		ResultSet rs = null;
 		
-	BajaFactura(String t){
-		setTitle(t);
+	BajaFactura(){
+		setTitle("Baja Factura");
 		setSize(250,250);
 		setLayout(new GridLayout(2,1));
 		setLocationRelativeTo(null);
@@ -64,6 +64,87 @@ public class BajaFactura extends Frame implements WindowListener, ActionListener
 		addWindowListener(this);
 		aceptar.addActionListener(this);
 		setVisible(true);
+	}
+	
+	
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(aceptar)) {
+			if(factura.getSelectedItem().equals("Seleccione una Factura")) {
+				System.out.println("Selecciona una factura");
+			}else {
+			muerteConfirmar.setVisible(true);
+			muerteConfirmar.setTitle("Baja Factura");
+			muerteConfirmar.setLocationRelativeTo(null);
+			muerteConfirmar.setSize(250,100);
+			muerteConfirmar.setLayout(new FlowLayout());
+			muerteConfirmar.add(seguro);
+			muerteConfirmar.add(seguroSi);
+			muerteConfirmar.add(seguroNo);
+			muerteConfirmar.addWindowListener(this);
+			seguroSi.addActionListener(this);
+			seguroNo.addActionListener(this);
+			}
+		}else if(e.getSource().equals(seguroSi)) {
+			//Elimina
+			muerteConfirmar.setVisible(false);
+			ProcesoEliminacion();
+			Registro();
+			ReajusteChoice();
+		}else if(e.getSource().equals(seguroNo)) {
+			//Vuelve
+			muerteConfirmar.setVisible(false);
+		}		
+	}
+	
+	
+	
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		if(this.isActive()) {
+			setVisible(false);
+		}
+		if(muerteConfirmar.isActive()) {
+			muerteConfirmar.setVisible(false);
+		}	
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	private void MeterDatos() {
@@ -121,43 +202,9 @@ public class BajaFactura extends Frame implements WindowListener, ActionListener
 			System.out.println("Error 2: "+sqle.getMessage());
 		}				
 	}
-
 	
+	//DESCONECTAR METER
 	
-	
-	public static void main (String[] args) {
-		new BajaFactura("Baja Factura");
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(aceptar)) {
-			if(factura.getSelectedItem().equals("Seleccione una Factura")) {
-				System.out.println("Selecciona una factura");
-			}else {
-			muerteConfirmar.setVisible(true);
-			muerteConfirmar.setTitle("Baja Factura");
-			muerteConfirmar.setLocationRelativeTo(null);
-			muerteConfirmar.setSize(250,100);
-			muerteConfirmar.setLayout(new FlowLayout());
-			muerteConfirmar.add(seguro);
-			muerteConfirmar.add(seguroSi);
-			muerteConfirmar.add(seguroNo);
-			muerteConfirmar.addWindowListener(this);
-			seguroSi.addActionListener(this);
-			seguroNo.addActionListener(this);
-			}
-		}else if(e.getSource().equals(seguroSi)) {
-			//Elimina
-			muerteConfirmar.setVisible(false);
-			ProcesoEliminacion();
-			Registro();
-			ReajusteChoice();
-		}else if(e.getSource().equals(seguroNo)) {
-			//Vuelve
-			muerteConfirmar.setVisible(false);
-		}		
-	}
 	
 	private void ProcesoEliminacion() {
 		String seleccionado = SplitElegido(factura.getSelectedItem());
@@ -225,53 +272,5 @@ public class BajaFactura extends Frame implements WindowListener, ActionListener
 			System.out.println("Se produjo un error");
 		}				
 	}
-	
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		if(this.isActive()) {
-			setVisible(false);
-		}
-		if(muerteConfirmar.isActive()) {
-			muerteConfirmar.setVisible(false);
-		}	
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	
 }

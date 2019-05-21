@@ -68,8 +68,8 @@ public class AltaFactura extends Frame implements WindowListener, ActionListener
 	Panel panel2 = new Panel();
 	Panel panel4 = new Panel();
 	
-	AltaFactura(String t) {
-		setTitle(t);
+	AltaFactura() {
+		setTitle("Alta Factura");
 		this.setVisible(true);
 		this.setSize(250,180);
 		setLocationRelativeTo(null);
@@ -153,10 +153,6 @@ public class AltaFactura extends Frame implements WindowListener, ActionListener
 				incorrecto();
 				System.out.println("Error 2: "+sqle.getMessage());
 			}
-	}
-
-	public static void main(String[] args) {
-		new AltaFactura("Alta Factura");
 	}
 
 	public void actionPerformed(ActionEvent arg0) {

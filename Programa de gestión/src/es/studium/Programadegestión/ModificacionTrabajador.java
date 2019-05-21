@@ -94,10 +94,10 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 	
 	String tiendaSeleccionada;
 
-	ModificacionTrabajador(String t){
+	ModificacionTrabajador(){
 		setVisible(true);
 		setSize(320,200);
-		setTitle(t);
+		setTitle("Modificacion Trabajador");
 		setLayout(new GridLayout(2,1));
 		setLocationRelativeTo(null);
 		panelPrincipal1.setLayout(new FlowLayout());
@@ -110,9 +110,6 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 		MeterDatos();
 		addWindowListener(this);
 		aceptar.addActionListener(this);
-	}
-	public static void main(String[] args) {
-		new ModificacionTrabajador("Modificacion Trabajador");
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -163,6 +160,52 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 				JOptionPane.showMessageDialog (null, "El dato ha sido modificado", "Modificado", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
+	}
+
+	@Override
+	public void windowActivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowClosed(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		if(isActive()) {
+			setVisible(false);
+		}
+		else if(modificarF.isActive()) {
+			modificarF.setVisible(false);
+		}	
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowIconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+
 	}
 
 	private void ProcesosDeRegistro(String seleccion, String nombre, String apellidos, String nomina, String tipoContrato, String horas, String tiendaSeleccionada, String jefeX) {
@@ -269,51 +312,7 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 			e.printStackTrace();
 		}	
 	}
-	@Override
-	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosed(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosing(WindowEvent arg0) {
-		if(isActive()) {
-			setVisible(false);
-		}
-		else if(modificarF.isActive()) {
-			modificarF.setVisible(false);
-		}	
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
+	
 	private String splitSeleccion(String selectedItem) {
 		String[] cosasElegidas = selectedItem.split(" - ");
 		String numeroElegido = cosasElegidas[0];
