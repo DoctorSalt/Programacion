@@ -89,6 +89,13 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 	Choice jefeSeleccionado =new Choice();
 	Button elegido = new Button("confimo");
 
+	String nombres;
+	String nominas;
+	String horas;
+	String apellidos;
+	String tipoContratos;
+	String tiendaSeleccionada;
+	
 	private static final long serialVersionUID = 1L;
 
 	public AltaTrabajador() {
@@ -206,12 +213,12 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 			jefeNo.setState(false);
 			tiendas.select(0);
 		}else if(arg0.getSource().equals(alta)) {
-			String nombre = nombreRespuesta.getText();
-			String nomina = nominaRespuesta.getText();
-			String horas = horasContratoRespuesta.getText();
-			String apellidos = apellidoRespuesta.getText();
-			String tipoContrato = tipoContratoRespuesta.getText();
-			String tiendaSeleccionada = splitSeleccionada(tiendas.getSelectedItem());
+			nombres = nombreRespuesta.getText();
+			nominas = nominaRespuesta.getText();
+			horas = horasContratoRespuesta.getText();
+			apellidos = apellidoRespuesta.getText();
+			tipoContratos = tipoContratoRespuesta.getText();
+			tiendaSeleccionada = splitSeleccionada(tiendas.getSelectedItem());
 			Boolean tieneJefe;
 			if((nombre.equals(""))||(nomina.equals(""))||(horas.equals(""))||(apellidos.equals(""))||(tipoContrato.equals(""))) {
 				incorrecto();
@@ -219,16 +226,13 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 			else {
 				if(true == jefeSi.getState()) {
 					tieneJefe=true;
-					SeleccioneJefe();					
 					Cargar();
-					ProcesosDeRegistro(nombre, nomina, horas, apellidos, tipoContrato,tiendaSeleccionada,jefeS);
-					Registro(usuario);
-					correcto();
+					SeleccioneJefe();					
 				}else if(true ==jefeNo.getState()) {
 					tieneJefe=false;
 					jefeS=null;
 					Cargar();
-					ProcesosDeRegistro(nombre, nomina, horas, apellidos, tipoContrato,tiendaSeleccionada,jefeS);
+					ProcesosDeRegistro();
 					Registro(usuario);
 					correcto();
 				}else {
@@ -243,7 +247,12 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 			}else {
 			jefeS=splitSeleccionada(jefeSeleccionado.getSelectedItem());
 			seleccioneJefe.setVisible(false);
+			ProcesosDeRegistro();
+			Registro(usuario);
+			correcto();
 			}
+		}else if(arg0.getSource().equals(bien)) {
+			correcto.setVisible(false);
 		}
 	}
 	private void SeleccioneJefe() {
@@ -255,6 +264,7 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 		panelS.add(especificar);
 		panelS.add(jefeSeleccionado);
 		jefeSeleccionado.addItem("Eliga una opcion");
+		panelS.add(elegido);
 		MeterDatos2();
 		elegido.addActionListener(this);
 		seleccioneJefe.addWindowListener(this);
@@ -317,7 +327,7 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 		}		
 	}
 
-	private void ProcesosDeRegistro(String nombre, String nomina, String horas, String apellidos, String tipoContrato, String tiendaSeleccionada, String jefe) {
+	private void ProcesosDeRegistro() {
 		String login = "";
 		if(usuario=="admin") {
 			login="AdminProgramacion";
@@ -335,17 +345,8 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
 						
 			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
-			sentencia ="insert into tiendapractica.trabajadores values(null,"+nombre+","+apellidos+", "+nomina+","+tipoContrato+", "+horas+", "+tiendaSeleccionada+", "+jefe+");";
-			rs = statement.executeQuery(sentencia);
-			if(rs.next())
-			{
-				System.out.println("Añadido OK");
-			}
-			else
-			{
-				incorrecto();
-				System.out.println("Error");
-			}
+			sentencia ="insert into tiendapractica.trabajadores values(null, '"+nombres+"', '"+apellidos+"', "+nominas+",'"+tipoContratos+"', "+horas+", "+tiendaSeleccionada+", "+jefeS+");";
+			statement.executeUpdate(sentencia);
 		}
 		catch (ClassNotFoundException cnfe)
 		{

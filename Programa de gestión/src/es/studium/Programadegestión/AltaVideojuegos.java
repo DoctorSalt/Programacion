@@ -187,7 +187,7 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 		}
 		
 		String driver = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://localhost:3306/login?autoReconnect=true&useSSL=false";
+		String url = "jdbc:mysql://localhost:3306/tiendaPractica?autoReconnect=true&useSSL=false";
 		
 		String password = "Studium2018;";
 		String sentencia;
@@ -206,17 +206,8 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
 						
 			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
-			sentencia ="insert into tiendapractica.videojuegos values(null,"+nombreS+","+generosS+","+plataformasS+");";
-			rs = statement.executeQuery(sentencia);
-			if(rs.next())
-			{
-				System.out.println("Añadido OK");
-			}
-			else
-			{
-				Incorrecto();
-				System.out.println("Error");
-			}
+			sentencia ="insert into tiendapractica.videojuegos values(null,'"+nombreS+"','"+generosS+"','"+plataformasS+"');";
+			statement.executeUpdate(sentencia);
 		}
 		catch (ClassNotFoundException cnfe)
 		{
@@ -232,7 +223,6 @@ public class AltaVideojuegos  extends Frame implements WindowListener, ActionLis
 			{
 				if(connection!=null)
 				{
-					rs.close();
 					statement.close();
 					connection.close();
 				}

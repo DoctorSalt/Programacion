@@ -134,7 +134,7 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 		}
 		
 		String driver = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://localhost:3306/login?autoReconnect=true&useSSL=false";
+		String url = "jdbc:mysql://localhost:3306/tiendaPractica?autoReconnect=true&useSSL=false";
 		
 		String password = "Studium2018;";
 		String sentencia;
@@ -153,17 +153,8 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
 						
 			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
-			sentencia ="insert into tiendapractica.clientes values(null,"+nombreC+","+fechaC+","+puntosC+");";
-			rs = statement.executeQuery(sentencia);
-			if(rs.next())
-			{
-				System.out.println("Añadido OK");
-			}
-			else
-			{
-				Incorrecto();
-				System.out.println("Error");
-			}
+			sentencia ="insert into tiendapractica.clientes values(null,'"+nombreC+"','"+fechaC+"',"+puntosC+");";
+			statement.executeUpdate(sentencia);
 		}
 		catch (ClassNotFoundException cnfe)
 		{
@@ -179,7 +170,6 @@ public class AltaCliente extends Frame implements WindowListener, ActionListener
 			{
 				if(connection!=null)
 				{
-					rs.close();
 					statement.close();
 					connection.close();
 				}

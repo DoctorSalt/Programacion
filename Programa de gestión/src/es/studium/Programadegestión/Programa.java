@@ -38,7 +38,6 @@ public class Programa implements WindowListener, ActionListener{
 		login.setLocationRelativeTo(null);
 		login.setLayout(new GridLayout(5,1));
 		login.setSize(400, 200);
-		login.setVisible(true);
 		login.setResizable(false);
 		panel.setLayout(new FlowLayout());
 		panel2.setLayout(new FlowLayout());
@@ -63,6 +62,7 @@ public class Programa implements WindowListener, ActionListener{
 		logins.addActionListener(this);
 		limpia.addActionListener(this);
 		olvide.addActionListener(this);		
+		login.setVisible(true);
 	}
 	public static void main(String[] args) {
 		Programa po = new Programa();
@@ -71,9 +71,9 @@ public class Programa implements WindowListener, ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if(limpia.equals(arg0.getSource())) {
-			usuarioT.setText("");
+			usuarioT.setText(" ");
 			claveT.setText("");
-		} else
+		} 
 		if(logins.equals(arg0.getSource())){
 			//hay varios usuarios
 			//Admin = Super, Usuario = Suc123; 
@@ -82,9 +82,9 @@ public class Programa implements WindowListener, ActionListener{
 			login.setVisible(false);
 			//Aqui hago la verificacion de la clave y el usuario
 			new Usuarios(usuario,clave);
-		} else
+		} 
 		if(olvide.equals(arg0.getSource())){
-			new OlvideClave(null);
+			new OlvideClave();
 			//Este se ejecuta en caso de que le demos al botón de  olvide la clave
 		}
 	}

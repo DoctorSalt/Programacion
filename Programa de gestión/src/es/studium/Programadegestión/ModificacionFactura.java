@@ -111,8 +111,7 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 		String clienteSeleccionadoRespuesta = splitSeleccion(clienteRespuesta.getSelectedItem());
 		try
 		{
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, login, password);
+			Conectar();
 			statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);			
 			sentencia ="UPDATE facturas SET fechaCompra = '"+fechaCompraRespuesta+"',"
 					+ "idClienteFK2 = "+clienteSeleccionadoRespuesta+" "
@@ -122,9 +121,6 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 		catch (SQLException sqle)
 		{
 			System.out.println("Error de SQL: "+sqle.getMessage());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		finally
 		{
@@ -164,8 +160,7 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 		String nombreChoice;
 		try
 		{
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, login, password);	
+			Conectar();
 			statement = connection.createStatement();
 			rs = statement.executeQuery(sentencia);
 			while (rs.next())
@@ -178,11 +173,7 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 		catch (SQLException sqle)
 		{
 			System.out.println("Error 2: "+sqle.getMessage());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		} 
 		finally
 		{
 			Desconectar();
@@ -274,8 +265,7 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 		String nombreChoice;
 		try
 		{
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, login, password);	
+			Conectar();
 			statement = connection.createStatement();
 			rs = statement.executeQuery(sentencia);
 			while (rs.next())
@@ -288,11 +278,7 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 		catch (SQLException sqle)
 		{
 			System.out.println("Error 2: "+sqle.getMessage());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		} 
 		finally
 		{
 			Desconectar();
@@ -315,8 +301,7 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 	private void RellenarDatos(String seleccion) {
 		try
 		{
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, login, password);
+			Conectar();
 			statement = connection.createStatement();
 			sentencia ="Select * from tiendapractica.facturas where idFactura = "+seleccion+" ;";
 			rs = statement.executeQuery(sentencia);
@@ -331,13 +316,24 @@ public class ModificacionFactura extends Frame implements WindowListener, Action
 		catch (SQLException sqle)
 		{
 			System.out.println("Error de SQL: "+sqle.getMessage());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 		finally
 		{
 			Desconectar();
 		}
 	}
+	private void Conectar() {
+		try {
+		Class.forName(driver);
+		connection = DriverManager.getConnection(url, login, password);
+		}
+		catch(ClassNotFoundException cnfe) {
+			System.out.println("Error 1: "+cnfe.getMessage());
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		}		
+	}
+	
 }

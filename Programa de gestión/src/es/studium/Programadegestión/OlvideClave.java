@@ -24,22 +24,20 @@ public class OlvideClave extends Frame implements WindowListener, ActionListener
 	
 	Dialog nofunciono= new Dialog (this,"No funciono");
 	
-	OlvideClave(String t){
-		this.setVisible(true);
+	OlvideClave(){
+		setVisible(true);
+		setTitle("Olvide la clave");
 		setLocationRelativeTo(null);
-		this.setSize(200,130);
-		this.setLayout(new FlowLayout());
-		this.add(lb);
-		this.add(escrito);
-		this.add(confirma);
-		this.addWindowListener(this);
+		setSize(200,130);
+		setLayout(new FlowLayout());
+		add(lb);
+		add(escrito);
+		add(confirma);
+		addWindowListener(this);
 		
 		
 		
 		confirma.addActionListener(this);
-	}
-	public static void main(String[] args) {
-		new OlvideClave("Olvide la Clave");
 	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {		

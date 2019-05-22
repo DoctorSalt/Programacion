@@ -217,7 +217,6 @@ public class AltaFactura extends Frame implements WindowListener, ActionListener
 			//select * from usuarios where nombreUsuario ='admin' and claveUsuario = 'Super';
 			fechaV=Americanizacion(fechaV);
 			sentencia ="insert into tiendapractica.facturas values(null, '"+fechaV+"',"+clienteV+");";
-			System.out.println(sentencia);
 			statement.executeUpdate(sentencia);
 		}
 		catch (ClassNotFoundException cnfe)

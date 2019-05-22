@@ -91,8 +91,7 @@ private static final long serialVersionUID = 1L;
 		String nombreChoice;
 		try
 		{
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, login, password);	
+			Conectar();
 			statement = connection.createStatement();
 			rs = statement.executeQuery(sentencia);
 			while (rs.next())
@@ -105,11 +104,7 @@ private static final long serialVersionUID = 1L;
 		catch (SQLException sqle)
 		{
 			System.out.println("Error 2: "+sqle.getMessage());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		} 
 		finally
 		{
 			Desconectar();
@@ -229,8 +224,7 @@ private static final long serialVersionUID = 1L;
 	private void DatosCompletos(String seleccion) {
 		try
 		{
-			Class.forName(driver);
-			connection = DriverManager.getConnection(url, login, password);
+			Conectar();
 			statement = connection.createStatement();
 			sentencia ="Select * from tiendapractica.clientes where idCliente = "+seleccion+" ;";
 			rs = statement.executeQuery(sentencia);
@@ -247,14 +241,24 @@ private static final long serialVersionUID = 1L;
 		catch (SQLException sqle)
 		{
 			System.out.println("Error de SQL: "+sqle.getMessage());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		finally
 		{
 			Desconectar();
 		}
+	}
+	private void Conectar() {
+		try {
+		Class.forName(driver);
+		connection = DriverManager.getConnection(url, login, password);
+		}
+		catch(ClassNotFoundException cnfe) {
+			System.out.println("Error 1: "+cnfe.getMessage());
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("Error 2: "+sqle.getMessage());
+		}		
 	}
 	private String americanoEspanol(String fechaV1) {
 		String[] fecha = fechaV1.split("-");
