@@ -95,7 +95,6 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 	String tiendaSeleccionada;
 
 	ModificacionTrabajador(){
-		setVisible(true);
 		setSize(320,200);
 		setTitle("Modificacion Trabajador");
 		setLayout(new GridLayout(2,1));
@@ -110,6 +109,7 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 		MeterDatos();
 		addWindowListener(this);
 		aceptar.addActionListener(this);
+		setVisible(true);
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -223,7 +223,6 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 					+ " idTiendaFK1 = '"+tiendaSeleccionada+"',"
 					+ " jefeDeFK1 ="+jefeX
 					+ " WHERE idTrabajador="+seleccion+";";
-			System.out.println(sentencia);
 			statement.executeUpdate(sentencia);
 		}
 		catch (SQLException sqle)
@@ -235,7 +234,7 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 		}
 	}
 	private void ModificarFuncion(String seleccion) {
-		modificarF.setVisible(true);
+		modificarF.setTitle("Consulta Trabajador");
 		modificarF.setSize(600,200);
 		modificarF.setLocationRelativeTo(null);
 		modificarF.setLayout(new BorderLayout());

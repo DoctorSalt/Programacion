@@ -1,12 +1,6 @@
  package es.studium.Programadegestión;
 
 import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Calendar;
-import java.util.Date;
 import java.awt.*;
 
 public class Programa implements WindowListener, ActionListener{

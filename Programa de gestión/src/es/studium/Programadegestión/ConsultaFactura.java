@@ -77,12 +77,6 @@ private static final long serialVersionUID = 1L;
 		Registro();
 	}
 
-	public static void main(String[] args) {
-		new ConsultaFactura();
-
-	}
-
-
 	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub

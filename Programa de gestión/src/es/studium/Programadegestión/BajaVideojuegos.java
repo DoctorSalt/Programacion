@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 public class BajaVideojuegos extends Frame implements WindowListener, ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -72,7 +74,7 @@ public class BajaVideojuegos extends Frame implements WindowListener, ActionList
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(aceptar)) {
 			if(videojuego.getSelectedItem().equals("Elija uno")) {
-				System.out.println("Elija una opcion");
+				JOptionPane.showMessageDialog (null, "Elija un videojuego", "Continuar", JOptionPane.INFORMATION_MESSAGE);
 			}
 			else {
 			muerteConfirmar.setVisible(true);
@@ -232,7 +234,6 @@ public class BajaVideojuegos extends Frame implements WindowListener, ActionList
 			statement = connection.createStatement();
 			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
 			sentencia ="delete from tiendapractica.videojuegos where idVideojuego = "+seleccionado+";";
-			System.out.println(sentencia);
 			statement.executeUpdate(sentencia);
 		}
 		catch (ClassNotFoundException cnfe)

@@ -3,6 +3,7 @@ package es.studium.Programadegestión;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
@@ -38,7 +39,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 
 public class ConsultaTrabajadores extends Frame implements WindowListener, ActionListener{
-	
+
 	private static final long serialVersionUID = 1L;
 
 	Panel panel = new Panel();
@@ -48,7 +49,7 @@ public class ConsultaTrabajadores extends Frame implements WindowListener, Actio
 	String nombreTabla="trabajadores";
 	JTable tablaRecogida;
 	String usuario;
-	
+
 	Button guardar= new Button("Guardar");
 	public ConsultaTrabajadores() {
 		setSize(800,250);
@@ -143,50 +144,96 @@ public class ConsultaTrabajadores extends Frame implements WindowListener, Actio
 	private void GuardarArchivo() {
 		// Se crea el documento
 		Document documento = new Document();
-		try
-		{
-			// Se crea el OutputStream para el fichero donde queremos dejar el pdf.
-			FileOutputStream ficheroPdf = new FileOutputStream("Consulta_Trabajadores.pdf");
-			PdfWriter.getInstance(documento,ficheroPdf).setInitialLeading(20);
-			// Se abre el documento.
-			documento.open();
-			documento.addTitle("Tabla de Consulta de Trabajadores");
-			Paragraph titulo = new Paragraph();
-	        titulo.setAlignment(Paragraph.ALIGN_CENTER);
-	        titulo.setFont(FontFactory.getFont("Times New Roman", 24, Font.BOLD, BaseColor.BLACK));
-	        titulo.add("***LISTA DE TRABAJADORES***");
-	        documento.add(titulo);
-	        Paragraph vacio1 = new Paragraph();
-	        vacio1.add("\n\n");
-	        documento.add(vacio1);	        
-			PdfPTable tabla = new PdfPTable(listaTrabajadoresTitulo.size());
-			for (int i = 0; i < listaTrabajadoresTitulo.size(); i++)
-			{
-				Paragraph registroT = new Paragraph();
-				registroT.setAlignment(Paragraph.ALIGN_JUSTIFIED);
-				registroT.setFont(FontFactory.getFont("Arial", 7, Font.BOLD));
-				registroT.add(listaTrabajadoresTitulo.get(i));
-				tabla.addCell(registroT);
-			}
-			for(int i=0;i<tablaRecogida.getRowCount();i++) 
-			{
-				System.out.println(listaTrabajadoresTitulo.size());
-				for(int a=0; a<listaTrabajadoresTitulo.size();a++) 
+		FileDialog fd = new FileDialog(this, "Indicar nombre y ubicación del archivo",FileDialog.SAVE);
+		fd.setVisible(true);
+		if(fd.getFile().contains(".pdf")) {
+			try {
+				FileOutputStream ficheroPdf = new FileOutputStream(fd.getDirectory()+fd.getFile());
+				PdfWriter.getInstance(documento,ficheroPdf).setInitialLeading(20);
+				// Se abre el documento.
+				documento.open();
+				documento.addTitle("Tabla de Consulta de Trabajadores");
+				Paragraph titulo = new Paragraph();
+				titulo.setAlignment(Paragraph.ALIGN_CENTER);
+				titulo.setFont(FontFactory.getFont("Times New Roman", 24, Font.BOLD, BaseColor.BLACK));
+				titulo.add("***LISTA DE TRABAJADORES***");
+				documento.add(titulo);
+				Paragraph vacio1 = new Paragraph();
+				vacio1.add("\n\n");
+				documento.add(vacio1);	        
+				PdfPTable tabla = new PdfPTable(listaTrabajadoresTitulo.size());
+				for (int i = 0; i < listaTrabajadoresTitulo.size(); i++)
 				{
-					System.out.println((i+1)+":"+(a+1));
-					Paragraph registroC = new Paragraph();
-					registroC.setAlignment(Paragraph.ALIGN_JUSTIFIED);
-					registroC.setFont(FontFactory.getFont("Arial", 7));
-					registroC.add((String) tablaRecogida.getValueAt(i,a));
-					tabla.addCell(registroC);
+					Paragraph registroT = new Paragraph();
+					registroT.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+					registroT.setFont(FontFactory.getFont("Arial", 7, Font.BOLD));
+					registroT.add(listaTrabajadoresTitulo.get(i));
+					tabla.addCell(registroT);
 				}
+				for(int i=0;i<tablaRecogida.getRowCount();i++) 
+				{
+					System.out.println(listaTrabajadoresTitulo.size());
+					for(int a=0; a<listaTrabajadoresTitulo.size();a++) 
+					{
+						System.out.println((i+1)+":"+(a+1));
+						Paragraph registroC = new Paragraph();
+						registroC.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+						registroC.setFont(FontFactory.getFont("Arial", 7));
+						registroC.add((String) tablaRecogida.getValueAt(i,a));
+						tabla.addCell(registroC);
+					}
+				}
+				documento.add(tabla);
+				documento.close();
 			}
-			documento.add(tabla);
-			documento.close();
-		}
-		catch ( Exception e )
-		{
-			e.printStackTrace();
+			catch ( Exception e )
+			{
+				e.printStackTrace();
+			}
+		}else {
+			try{
+				FileOutputStream ficheroPdf = new FileOutputStream(fd.getDirectory()+fd.getFile()+".pdf");
+				PdfWriter.getInstance(documento,ficheroPdf).setInitialLeading(20);
+				// Se abre el documento.
+				documento.open();
+				documento.addTitle("Tabla de Consulta de Trabajadores");
+				Paragraph titulo = new Paragraph();
+				titulo.setAlignment(Paragraph.ALIGN_CENTER);
+				titulo.setFont(FontFactory.getFont("Times New Roman", 24, Font.BOLD, BaseColor.BLACK));
+				titulo.add("***LISTA DE TRABAJADORES***");
+				documento.add(titulo);
+				Paragraph vacio1 = new Paragraph();
+				vacio1.add("\n\n");
+				documento.add(vacio1);	        
+				PdfPTable tabla = new PdfPTable(listaTrabajadoresTitulo.size());
+				for (int i = 0; i < listaTrabajadoresTitulo.size(); i++)
+				{
+					Paragraph registroT = new Paragraph();
+					registroT.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+					registroT.setFont(FontFactory.getFont("Arial", 7, Font.BOLD));
+					registroT.add(listaTrabajadoresTitulo.get(i));
+					tabla.addCell(registroT);
+				}
+				for(int i=0;i<tablaRecogida.getRowCount();i++) 
+				{
+					System.out.println(listaTrabajadoresTitulo.size());
+					for(int a=0; a<listaTrabajadoresTitulo.size();a++) 
+					{
+						System.out.println((i+1)+":"+(a+1));
+						Paragraph registroC = new Paragraph();
+						registroC.setAlignment(Paragraph.ALIGN_JUSTIFIED);
+						registroC.setFont(FontFactory.getFont("Arial", 7));
+						registroC.add((String) tablaRecogida.getValueAt(i,a));
+						tabla.addCell(registroC);
+					}
+				}
+				documento.add(tabla);
+				documento.close();
+			}
+			catch ( Exception e )
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	private void Registro(String usuario) {

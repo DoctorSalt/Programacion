@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 public class BajaCliente extends Frame implements WindowListener, ActionListener{
 
 	private static final long serialVersionUID = 1L;
@@ -125,7 +127,7 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(aceptar)) {
 			if(cliente.getSelectedItem().equals("Seleccione un cliente")) {
-				System.out.println("Elija un cliente");
+				JOptionPane.showMessageDialog (null, "Elija un cliente", "Continuar", JOptionPane.INFORMATION_MESSAGE);
 			}else {
 			muerteConfirmar.setVisible(true);
 			muerteConfirmar.setTitle("Baja Cliente");
@@ -208,7 +210,6 @@ public class BajaCliente extends Frame implements WindowListener, ActionListener
 			statement = connection.createStatement();
 			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
 			sentencia ="delete from tiendapractica.clientes where idCliente = "+seleccionado+";";
-			System.out.println(sentencia);
 			statement.executeUpdate(sentencia);
 		}
 		catch (ClassNotFoundException cnfe)

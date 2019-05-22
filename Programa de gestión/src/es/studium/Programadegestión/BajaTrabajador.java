@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 public class BajaTrabajador extends Frame implements WindowListener, ActionListener{
 	private static final long serialVersionUID = 1L;
 
@@ -56,10 +58,10 @@ public class BajaTrabajador extends Frame implements WindowListener, ActionListe
 		panel1.setLayout(new FlowLayout());
 		add(panel);
 		add(panel1);
+		trabajador.addItem("Seleccione un trabajador");
 		MeterDatos();
 		panel.add(trabajador);
 		panel1.add(aceptar);
-		trabajador.addItem("Seleccione un trabajador");
 		addWindowListener(this);
 		aceptar.addActionListener(this);
 		setVisible(true);
@@ -74,7 +76,7 @@ public class BajaTrabajador extends Frame implements WindowListener, ActionListe
 			muerteConfirmar.setSize(270,100);
 			muerteConfirmar.setLayout(new FlowLayout());
 			if(trabajador.getSelectedItem().equals("Seleccione un trabajador")) {
-				System.out.println("Seleccione un trabajador");
+				JOptionPane.showMessageDialog (null, "Elija un trabajador", "Continuar", JOptionPane.INFORMATION_MESSAGE);
 			}else {
 				muerteConfirmar.add(seguro);
 				muerteConfirmar.add(seguroSi);
@@ -204,7 +206,6 @@ public class BajaTrabajador extends Frame implements WindowListener, ActionListe
 			statement = connection.createStatement();
 			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
 			sentencia ="delete from tiendapractica.trabajadores where idTrabajador = "+seleccionado+";";
-			System.out.println(sentencia);
 			statement.executeUpdate(sentencia);
 		}
 		catch (ClassNotFoundException cnfe)

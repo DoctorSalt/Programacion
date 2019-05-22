@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 public class BajaFactura extends Frame implements WindowListener, ActionListener{
 
 		private static final long serialVersionUID = 1L;
@@ -72,7 +74,7 @@ public class BajaFactura extends Frame implements WindowListener, ActionListener
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(aceptar)) {
 			if(factura.getSelectedItem().equals("Seleccione una Factura")) {
-				System.out.println("Selecciona una factura");
+				JOptionPane.showMessageDialog (null, "Eliga una factura", "Continuar", JOptionPane.INFORMATION_MESSAGE);
 			}else {
 			muerteConfirmar.setVisible(true);
 			muerteConfirmar.setTitle("Baja Factura");
@@ -218,7 +220,6 @@ public class BajaFactura extends Frame implements WindowListener, ActionListener
 			statement = connection.createStatement();
 			//Crear un objeto ResultSet para guardar lo obtenido y ejecutar la sentencia SQL
 			sentencia ="delete from tiendapractica.facturas where idfactura = "+seleccionado+";";
-			System.out.println(sentencia);
 			statement.executeUpdate(sentencia);
 		}
 		catch (ClassNotFoundException cnfe)

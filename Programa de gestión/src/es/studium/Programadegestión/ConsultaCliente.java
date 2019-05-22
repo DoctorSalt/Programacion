@@ -94,12 +94,6 @@ public class ConsultaCliente  extends Frame implements WindowListener, ActionLis
 		}
 	}
 
-	public static void main(String[] args) {
-		new ConsultaCliente();
-
-	}
-
-
 	@Override
 	public void windowActivated(WindowEvent e) {
 		// TODO Auto-generated method stub
