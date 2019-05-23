@@ -49,13 +49,11 @@ public class Programa implements WindowListener, ActionListener{
 		login.add(panel4);
 		panel4.add(logins);
 		panel4.add(limpia);
-		panel5.add(olvide);
 		login.add(panel5);
 		claveT.setEchoChar('*');
 		login.addWindowListener(this);
 		logins.addActionListener(this);
 		limpia.addActionListener(this);
-		olvide.addActionListener(this);		
 		login.setVisible(true);
 	}
 	public static void main(String[] args) {
@@ -66,6 +64,7 @@ public class Programa implements WindowListener, ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		if(limpia.equals(arg0.getSource())) {
 			usuarioT.setText(" ");
+			claveT.selectAll();
 			claveT.setText("");
 		} 
 		if(logins.equals(arg0.getSource())){
@@ -77,11 +76,8 @@ public class Programa implements WindowListener, ActionListener{
 			//Aqui hago la verificacion de la clave y el usuario
 			new Usuarios(usuario,clave);
 		} 
-		if(olvide.equals(arg0.getSource())){
-			new OlvideClave();
-			//Este se ejecuta en caso de que le demos al botón de  olvide la clave
-		}
 	}
+	
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub

@@ -37,7 +37,7 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 	Label nomina = new Label ("Nomina:");
 	Label tipoContrato = new Label ("Tipo de Contrato:");
 	Label horasContrato = new Label ("Horas de Trabajo:");
-	Label jefe = new Label ("¿Es jefe?");
+	Label jefe = new Label ("¿Tiene jefe?");
 	Label tienda = new Label ("Tienda a la que pertenece");
 
 	TextField nombreRespuesta = new TextField("");
@@ -97,13 +97,13 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 	String tiendaSeleccionada;
 	
 	private static final long serialVersionUID = 1L;
-
+	
 	public AltaTrabajador() {
 		setTitle("Alta Trabajador");
-		this.setVisible(true);
-		this.setSize(600,200);
+		setVisible(true);
+		setSize(900,200);
 		setLocationRelativeTo(null);
-		this.setLayout(new BorderLayout());
+		setLayout(new BorderLayout());
 		panelNorte.setLayout(new GridLayout(3,4));
 		panelCentro.setLayout(new GridLayout(2,1));
 		panelDoble.setLayout(new GridLayout(1,3));
@@ -456,5 +456,4 @@ public class AltaTrabajador  extends Frame implements WindowListener, ActionList
 		// TODO Auto-generated method stub
 
 	}
-
 }

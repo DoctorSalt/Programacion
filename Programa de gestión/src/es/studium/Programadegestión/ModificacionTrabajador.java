@@ -41,7 +41,7 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 	Label nomina = new Label ("Nomina:");
 	Label tipoContrato = new Label ("Tipo de Contrato:");
 	Label horasContrato = new Label ("Horas de Trabajo:");
-	Label jefe = new Label ("¿Es jefe?");
+	Label jefe = new Label ("¿Tiene jefe?");
 	Label tienda = new Label ("Tienda a la que pertenece");
 
 	TextField nombreRespuesta = new TextField("Text");
@@ -235,7 +235,7 @@ public class ModificacionTrabajador  extends Frame implements WindowListener, Ac
 	}
 	private void ModificarFuncion(String seleccion) {
 		modificarF.setTitle("Consulta Trabajador");
-		modificarF.setSize(600,200);
+		modificarF.setSize(900,200);
 		modificarF.setLocationRelativeTo(null);
 		modificarF.setLayout(new BorderLayout());
 		panelNorte.setLayout(new GridLayout(3,4));
