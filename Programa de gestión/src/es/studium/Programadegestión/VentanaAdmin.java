@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 
 public class VentanaAdmin extends Frame implements WindowListener, ActionListener{
 
@@ -97,7 +98,14 @@ public class VentanaAdmin extends Frame implements WindowListener, ActionListene
 		}else if(arg0.getSource().equals(videojuegosAlta)){
 			new AltaVideojuegos();
 		}else if(arg0.getSource().equals(ayudaAlta)){
-			new AyudaAdmin("Ayuda Adminisitrador");
+			try
+			{
+			Runtime.getRuntime().exec("hh.exe E:\\Capturas Programacio\\PracticaCompleta.chm");
+			}
+			catch (IOException e)
+			{
+			e.printStackTrace();
+			}
 		}else if(arg0.getSource().equals(trabajadoresModificacion)) {
 			new ModificacionTrabajador();
 		}else if(arg0.getSource().equals(trabajadoresBaja)) {
