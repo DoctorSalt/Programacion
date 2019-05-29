@@ -1,0 +1,35 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=PracticaCompleta.chm
+Contents file=E:\Capturas Programacio\ContentsPractica.hhc
+Default topic=AltaCliente.html
+Display compile progress=No
+Index file=IndexPractica.hhk
+Language=0xc0a Español (España, internacional)
+
+
+[FILES]
+AltaCliente.html
+AltaFactura.html
+AltaTrabajador.html
+AltaVideojuegos.html
+BajaCliente.html
+BajaFacturas.html
+BajaTrabajador.html
+BajaVideojuegos.html
+ConsultaClientes.html
+ConsultaFacturas.html
+ConsultaTrabajador.html
+ConsultaVideojuegos.html
+Index.html
+Login_Admin.html
+Login_Usuario.html
+ModificacionCliente.html
+ModificacionFactura.html
+ModificacionTrabajador.html
+ModificacionVideojuegos.html
+Ventana Admin.html
+VentanaUsuario.html
+
+[INFOTYPES]
+

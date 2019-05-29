@@ -1,0 +1,19 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=PracticaUsuario.chm
+Contents file=E:\Capturas Programacio\ContentsPractica.hhc
+Default topic=AltaCliente.html
+Display compile progress=No
+Language=0xc0a Español (España, internacional)
+
+
+[FILES]
+AltaCliente.html
+AltaFactura.html
+AltaTrabajador.html
+AltaVideojuegos.html
+Login_Usuario.html
+VentanaUsuario.html
+
+[INFOTYPES]
+
