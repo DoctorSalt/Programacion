@@ -100,7 +100,7 @@ public class VentanaAdmin extends Frame implements WindowListener, ActionListene
 		}else if(arg0.getSource().equals(ayudaAlta)){
 			try
 			{
-			Runtime.getRuntime().exec("hh.exe E:\\Capturas Programacio\\PracticaCompleta.chm");
+			Runtime.getRuntime().exec("hh.exe ArchivosHTML//PracticaCompleta.chm");
 			}
 			catch (IOException e)
 			{

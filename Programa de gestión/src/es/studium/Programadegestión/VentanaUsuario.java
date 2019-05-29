@@ -103,7 +103,7 @@ public class VentanaUsuario extends Frame implements WindowListener, ActionListe
 		}else if(arg0.getSource().equals(ayudaAlta)){
 			try
 			{
-				Runtime.getRuntime().exec("hh.exe E:\\Capturas Programacio\\PracticaUsuario.chm");
+				Runtime.getRuntime().exec("hh.exe ArchivosHTML//PracticaUsuario.chm");
 			}
 			catch (IOException e)
 			{
