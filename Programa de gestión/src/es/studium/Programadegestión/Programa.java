@@ -94,6 +94,7 @@ public class Programa implements WindowListener, ActionListener{
 	public void windowClosing(WindowEvent arg0) {
 		if(login.isActive()) {
 			login.setVisible(false);
+			System.exit(0);
 		}
 	}
 
