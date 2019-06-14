@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="C:/Users/Studium/git/repository/Programa de gestión/LibreriasExtras/itext/itext5-xmlworker-5.5.11.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Studium/git/repository/Programa de gestión/LibreriasExtras/itext/itext5-xmlworker-5.5.11-javadoc.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Studium/git/repository/Programa de gestión/LibreriasExtras/itext/itext5-xmlworker-5.5.11-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Studium/git/repository/Programa de gestión/LibreriasExtras/mysql-connector-java-5.1.46.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

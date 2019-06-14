@@ -65,7 +65,12 @@ public class TablaConsulta {
 			while(rs.next()) {
 				Object [] fila = new Object[tamano];
 				for(int i=0; i<tamano;i++) {
-					fila[i] = rs.getString(listaClientesBusquedaR.get(i));
+					String dato= rs.getString(listaClientesBusquedaR.get(i));
+					if(dato.contains("-")) {
+					fila[i] = fechaNormalizacion(dato);
+					}else {
+					fila[i] = dato;
+					}
 				}
 				modelo.addRow(fila);
 			}
@@ -96,5 +101,11 @@ public class TablaConsulta {
 		}
 		JTable tabla = new JTable(modelo);
 		return tabla;
+	}
+
+	private Object fechaNormalizacion(String fechaAnterior) {	
+		String[] fecha = fechaAnterior.split("-");
+		String fechaPosterior =fecha[2]+"-"+fecha[1]+"-"+fecha[0];
+		return fechaPosterior;
 	}
 }
